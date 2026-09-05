@@ -189,6 +189,13 @@ const ChatMessageItemImpl = ({
           modelLabel={msg.modelLabel}
           metadata={(msg as any).metadata}
           mode={msg.mode}
+          persistentTrace={Boolean(
+            msg.mode === "code" ||
+              msg.mode === "operator" ||
+              msg.longRunId ||
+              msg.computerTaskId ||
+              msg.operatorRunId
+          )}
 
           liked={msg.liked}
           onLikeMessage={handleLikeMessage}
