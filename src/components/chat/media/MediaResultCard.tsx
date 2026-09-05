@@ -2,9 +2,8 @@ import { m as motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, Download, Film, Loader2, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import MegsyStar from "@/components/branding/MegsyStar";
+import MegsyStarGradient from "@/components/branding/MegsyStarGradient";
 
-import { ToolLoader } from "@/components/chat/primitives/ToolStatus";
 import { SecureVideo } from "@/components/chat/media/SecureVideo";
 
 async function forceDownload(url: string, filename: string) {
@@ -96,11 +95,6 @@ export default function MediaResultCard({
               className="group relative"
             >
               {/* Unified running caption: shared tool icon + loader label */}
-              {r.status === "running" && (
-                <div className="mb-2 flex items-center gap-2 px-0.5">
-                  <ToolLoader label={r.title ? `Generating ${r.title}` : "Generating…"} />
-                </div>
-              )}
 
               {/* Tile */}
               <div
@@ -143,7 +137,7 @@ export default function MediaResultCard({
                     </>
                   )
                 ) : r.status === "running" ? (
-                  <RunningTile progress={r.progress} previewUrl={r.type === "image" ? r.previewUrl : undefined} />
+                  <RunningTile previewUrl={r.type === "image" ? r.previewUrl : undefined} />
                 ) : r.status === "error" ? (
                   <div className="flex flex-col items-center gap-1.5 text-destructive p-3 text-center">
                     <AlertCircle className="w-5 h-5" />
@@ -234,7 +228,7 @@ export default function MediaResultCard({
  *  - Soft breathing overlay + optional blurred partial preview
  *  - Thin progress hairline at the bottom
  */
-function RunningTile({ progress, previewUrl }: { progress?: number; previewUrl?: string }) {
+function RunningTile({ previewUrl }: { progress?: number; previewUrl?: string }) {
   return (
     <>
       {previewUrl ? (
@@ -245,63 +239,32 @@ function RunningTile({ progress, previewUrl }: { progress?: number; previewUrl?:
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35 }}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            filter: `blur(${Math.max(2, 20 - (progress ?? 0) * 20)}px) saturate(1.05)`,
-            transform: "scale(1.04)",
-          }}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: "blur(18px) saturate(1.05)", transform: "scale(1.04)" }}
         />
       ) : null}
 
-      {/* Single soft sweep highlight */}
+      {/* Light passing through the empty frame */}
       <motion.div
-        className="absolute inset-y-0 -inset-x-1/2 pointer-events-none"
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 -inset-x-1/2"
         style={{
           background:
-            "linear-gradient(110deg, transparent 35%, hsl(var(--foreground) / 0.09) 50%, transparent 65%)",
+            "linear-gradient(110deg, transparent 38%, hsl(var(--foreground) / 0.10) 50%, transparent 62%)",
         }}
         animate={{ x: ["-40%", "140%"] }}
-        transition={{ duration: 2.4, ease: "easeInOut", repeat: Infinity }}
+        transition={{ duration: 2.3, ease: "easeInOut", repeat: Infinity }}
       />
 
-      {!previewUrl && (
-        <div className="absolute inset-0 grid place-items-center pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 grid place-items-center">
+        <div className="flex flex-col items-center gap-2.5">
           <motion.span
-            className="grid h-11 w-11 place-items-center rounded-full bg-background/50 backdrop-blur-sm"
-            animate={{ scale: [1, 1.12, 1], opacity: [0.75, 1, 0.75] }}
+            animate={{ scale: [1, 1.12, 1], opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity }}
           >
-            <MegsyStar className="h-5 w-5 text-[var(--megsy-blue)]" />
+            <MegsyStarGradient className="h-7 w-7" />
           </motion.span>
         </div>
-      )}
-
-      {/* Soft breathing overlay */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(65% 65% at 50% 50%, hsl(var(--foreground) / 0.04), transparent 75%)",
-        }}
-        animate={{ opacity: [0.4, 0.85, 0.4] }}
-        transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
-      />
-
-      {/* Thin progress hairline at the bottom */}
-      <div className="absolute inset-x-3 bottom-2 h-[2px] overflow-hidden rounded-full bg-foreground/10">
-        {Number.isFinite(progress as number) ? (
-          <motion.div
-            className="h-full bg-foreground/70"
-            animate={{ width: `${Math.min(100, Math.max(6, (progress as number) * 100))}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          />
-        ) : (
-          <motion.div
-            className="h-full w-1/3 bg-foreground/70 rounded-full"
-            animate={{ x: ["-100%", "300%"] }}
-            transition={{ duration: 1.6, ease: "easeInOut", repeat: Infinity }}
-          />
-        )}
       </div>
     </>
   );

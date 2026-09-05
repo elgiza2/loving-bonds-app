@@ -13,7 +13,7 @@
  * motion — the static frame still reserves the correct space.
  */
 
-import MegsyStar from "@/components/branding/MegsyStar";
+import MegsyStarGradient from "@/components/branding/MegsyStarGradient";
 import { isLowEndDevice } from "@/lib/deviceCapability";
 import { useUserLang } from "@/lib/authI18n";
 
@@ -42,10 +42,10 @@ export function MediaGenerationSkeleton({
   const label =
     kind === "video"
       ? isAr
-        ? "بنجهّز الفيديو"
+        ? "جاري توليد الفيديو"
         : "Creating your video"
       : isAr
-        ? "بنرسم الصورة"
+        ? "جاري توليد الصورة"
         : "Creating your image";
 
   const aspect = kind === "video" ? "aspect-[9/16]" : "aspect-square";
@@ -72,14 +72,10 @@ export function MediaGenerationSkeleton({
 
         {/* Centre mark */}
         <div className="absolute inset-0 grid place-items-center">
-          <div className="flex flex-col items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-background/50 backdrop-blur-sm">
-              <MegsyStar
-                className={`h-5 w-5 text-[var(--megsy-blue)] ${
-                  still ? "" : "motion-safe:animate-[media-breathe_1.8s_ease-in-out_infinite]"
-                }`}
-              />
-            </span>
+          <div className="flex flex-col items-center gap-2.5">
+            <MegsyStarGradient
+              className={`h-7 w-7 ${still ? "" : "motion-safe:animate-[media-breathe_1.8s_ease-in-out_infinite]"}`}
+            />
             <span className="px-4 text-center text-[12.5px] font-medium text-muted-foreground">
               {label}
             </span>
