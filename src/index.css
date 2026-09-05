@@ -200,6 +200,10 @@ html.lenis body {
   --page-bg: #1c1c1c;
   /* Megsy brand blue — used across ThinkingLoader, AgentStatusLine, ChatMessage sources, MegsyStar */
   --megsy-blue: #5b8def;
+  /* Megsy computer gold — the rotating star on the computer dock */
+  --megsy-gold: #e0b25a;
+  --megsy-gold-strong: #f5d489;
+
 
   /* Code block surface tokens — unified across CodeBlock + highlighter */
   --code-bg: #0b0d10;
