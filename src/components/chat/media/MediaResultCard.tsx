@@ -154,6 +154,25 @@ export default function MediaResultCard({
                   </div>
                 ) : null}
               </div>
+
+              {/* Quiet action row — download sits with the message actions style */}
+              {r.status === "done" && r.url && (
+                <div className="mt-1 flex items-center gap-0.5 px-0.5">
+                  <button
+                    type="button"
+                    aria-label="Download"
+                    onClick={() =>
+                      forceDownload(
+                        r.url!,
+                        `${r.title.replace(/[^\w-]+/g, "_") || `scene-${r.index}`}.${r.type === "video" ? "mp4" : "png"}`,
+                      )
+                    }
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:text-foreground"
+                  >
+                    <Download className="h-[15px] w-[15px]" strokeWidth={1.75} />
+                  </button>
+                </div>
+              )}
             </motion.div>
           );
         })}
