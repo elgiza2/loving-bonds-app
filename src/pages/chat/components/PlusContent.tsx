@@ -228,8 +228,7 @@ const PlusMain = (p: PlusContentProps) => {
     </button>
   );
 
-    </button>
-  );
+
 
   const SearchModeList = ({ compact }: { compact?: boolean }) => (
     <motion.div
