@@ -1343,6 +1343,21 @@ const ChatPage = () => {
   const submitLockAtRef = useRef(0);
   const sendWithTextRef = useRef<((overrideText?: string) => Promise<void>) | undefined>(undefined);
 
+  // Watchdog: while the composer shows "stop", keep checking that something is
+  // really running. If no stream and no computer run are active, release the
+  // composer instead of leaving the send button frozen.
+  useEffect(() => {
+    if (!isLoading) return;
+    const id = window.setInterval(() => {
+      if (!abortControllerRef.current && !getActiveComputerRun() && !operatorRunId && !activeResearchJobId) {
+        isSubmittingRef.current = false;
+        setIsLoading(false);
+        setIsThinking(false);
+      }
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [isLoading, operatorRunId, activeResearchJobId]);
+
   const ownInsertedIdsRef = useRef<Set<string>>(new Set());
 
   // Last message that expressed a "do this on a real computer" intent, so a
