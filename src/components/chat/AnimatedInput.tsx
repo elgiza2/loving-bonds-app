@@ -14,7 +14,6 @@ import ModelPickerDropdown from "@/components/model-picker/ModelPickerDropdown";
 import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 import { getAgentById } from "@/lib/agentRegistry";
 import { TypingAnimation } from "@/components/ui/typing-animation";
-import ComposerMicButton from "@/components/chat/ComposerMicButton";
 import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
 import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
@@ -535,7 +534,6 @@ const AnimatedInput = ({
                   </Button>
                 </motion.div>
               ) : null}
-              )}
             </AnimatePresence>
           </div>
 
