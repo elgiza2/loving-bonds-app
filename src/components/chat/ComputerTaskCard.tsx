@@ -115,16 +115,20 @@ export default function ComputerTaskCard({ taskId }: Props) {
 
   if (timedOut || task?.status === "failed") {
     return (
-      <p className="my-2 text-[13px] leading-relaxed text-destructive">
-        {timedOut ? "المهمة استغرقت وقتًا أطول من المتوقع وتم إيقافها." : computerErrorMessage(task.error)}
-      </p>
+      <div className="my-2 space-y-2">
+        <ThinkingTrace variant="tools" defaultOpen steps={traceSteps} text={traceText} tool="browser" />
+        <p className="text-[13px] leading-relaxed text-destructive">
+          {timedOut ? "المهمة استغرقت وقتًا أطول من المتوقع وتم إيقافها." : computerErrorMessage(task.error)}
+        </p>
+      </div>
     );
   }
 
   if (!task?.result_text && files.length === 0) return null;
 
   return (
-    <div className="my-1">
+    <div className="my-1 space-y-2">
+      <ThinkingTrace variant="tools" defaultOpen steps={traceSteps} text={traceText} tool="browser" />
       {task?.result_text && <ChatMessage role="assistant" content={task.result_text} />}
 
 

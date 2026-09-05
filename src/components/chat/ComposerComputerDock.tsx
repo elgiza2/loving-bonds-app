@@ -45,21 +45,22 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
 
   return (
     <div
-      className={`overflow-hidden rounded-[22px] border border-border/50 bg-background/80 backdrop-blur-md shadow-sm ${className}`}
+      data-composer-computer
+      className={`overflow-hidden rounded-[20px] border border-border/45 bg-background/75 shadow-none backdrop-blur-md ${className}`}
       dir={isAr ? "rtl" : "ltr"}
     >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 px-3.5 py-2 text-start"
+        className="flex min-h-10 w-full items-center gap-2 px-3.5 py-2 text-start"
       >
         <span
           className="grid shrink-0 place-items-center"
           style={{ color: "var(--megsy-gold)" }}
         >
           <MegsyStar
-            className={`h-3.5 w-3.5 ${view.active ? "motion-safe:animate-[spin_5s_linear_infinite]" : ""}`}
+            className={`h-4 w-4 ${view.active ? "motion-safe:animate-[spin_3s_linear_infinite]" : ""}`}
           />
         </span>
 
@@ -74,8 +75,8 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
       </button>
 
       <div
-        className="relative w-full overflow-hidden bg-black/85 transition-[height] duration-[420ms] ease-out"
-        style={{ height: open ? "min(46vh, 320px)" : "72px" }}
+        className="relative w-full overflow-hidden bg-foreground/90 transition-[height] duration-[420ms] ease-out"
+        style={{ height: open ? "min(48vh, 340px)" : "64px" }}
       >
         {screen}
         {!open ? (
