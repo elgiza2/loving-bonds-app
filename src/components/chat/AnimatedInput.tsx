@@ -302,8 +302,7 @@ const AnimatedInput = ({
   const skillDraft = value.startsWith(SKILL_MARKER);
 
   /** Compact pill: idle composer shrinks in from the sides and rounds fully. */
-  const compact =
-    !focused && !hasText && !isEditing && !headerSlot && !inlineSlot && !activeServiceSlot;
+  const compact = !focused && !hasText && !isEditing;
 
   return (
 
