@@ -36,13 +36,13 @@ const handleCardClick = (
 };
 
 const chipClass =
-  "group flex items-center gap-2 rounded-lg border border-border bg-background " +
-  "px-4 h-10 hover:bg-muted/40 transition-colors duration-150";
+  "group inline-flex items-center gap-1.5 rounded-full bg-muted/50 " +
+  "px-3.5 h-8 hover:bg-muted active:scale-[0.97] transition-all duration-150";
 
 const iconClass =
-  "w-4 h-4 text-muted-foreground shrink-0 transition-colors group-hover:text-foreground";
+  "w-[15px] h-[15px] text-muted-foreground shrink-0 transition-colors group-hover:text-foreground";
 const labelClass =
-  "text-[13px] font-medium text-foreground whitespace-nowrap transition-colors";
+  "text-[12.5px] font-medium text-foreground/90 whitespace-nowrap transition-colors";
 
 /** Desktop-only: compact icon chips shown below the composer (no images). */
 export function StarterChips({ onPick, className = "" }: StarterCardsProps) {
@@ -54,7 +54,7 @@ export function StarterChips({ onPick, className = "" }: StarterCardsProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className={`hidden md:flex flex-wrap items-center justify-center gap-2.5 ${className}`}
+        className={`hidden md:flex flex-wrap items-center justify-center gap-2 ${className}`}
       >
         {CARDS.map((c) => (
           <button
@@ -81,7 +81,7 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={`relative w-full md:hidden ${className}`}
     >
-      <div className="flex gap-2.5 overflow-x-auto px-5 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x">
+      <div className="flex gap-2 overflow-x-auto px-4 py-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x">
         {CARDS.map((c) => (
           <button
             key={c.id}
