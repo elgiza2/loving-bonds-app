@@ -14,7 +14,6 @@ import ModelPickerDropdown from "@/components/model-picker/ModelPickerDropdown";
 import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 import { getAgentById } from "@/lib/agentRegistry";
 import { TypingAnimation } from "@/components/ui/typing-animation";
-import ComposerMicButton from "@/components/chat/ComposerMicButton";
 import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
 import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
@@ -302,6 +301,9 @@ const AnimatedInput = ({
 
   const skillDraft = value.startsWith(SKILL_MARKER);
 
+  /** Compact pill: idle composer shrinks in from the sides and rounds fully. */
+  const compact = !focused && !hasText && !isEditing;
+
   return (
 
     <div className="relative">
@@ -319,7 +321,11 @@ const AnimatedInput = ({
       {/* Desktop: liquid-glass surface (no solid card wrapper) */}
       <div className="md:rounded-[28px]">
         <motion.div
-          className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto rounded-[24px] px-3.5 pt-3 pb-2.5 relative z-10 md:rounded-[24px] md:px-4 md:pt-3 md:pb-2.5 border-0 ${chatContext ? "chat-composer-liquid" : ""}`}
+          className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto relative z-10 border-0 transition-[border-radius,margin,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            compact
+              ? "mx-4 rounded-[28px] px-3.5 pt-2 pb-2 md:mx-6"
+              : "mx-0 rounded-[26px] px-3.5 pt-3 pb-2.5 md:px-4 md:pt-3 md:pb-2.5"
+          } ${chatContext ? "chat-composer-liquid" : ""}`}
         >
           {/* Active service strip — fused into the top of the composer card */}
           {headerSlot && (
@@ -471,7 +477,7 @@ const AnimatedInput = ({
               morphing action button (mic ↔ send) on the end side. */}
           <div
             dir="ltr"
-            className="relative flex items-center gap-1 pt-1 md:pt-0"
+            className={`relative flex items-center gap-1 ${compact ? "pt-0" : "pt-1 md:pt-0"}`}
           >
             <Button
               type="button"
@@ -526,23 +532,7 @@ const AnimatedInput = ({
                     <ArrowUp className="w-[18px] h-[18px] md:w-4 md:h-4" strokeWidth={2.2} />
                   </Button>
                 </motion.div>
-              ) : (
-                <motion.div
-                  key="mic"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                >
-                  <ComposerMicButton
-                    accent
-                    onListeningChange={setListening}
-                    onTranscript={(text) =>
-                      onChange(value ? `${value.trimEnd()} ${text}` : text)
-                    }
-                  />
-                </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </div>
 

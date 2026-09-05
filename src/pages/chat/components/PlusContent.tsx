@@ -193,12 +193,16 @@ const PlusMain = (p: PlusContentProps) => {
       data-no-neo
       type="button"
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3.5 px-3 py-3.5 rounded-[14px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3 px-2.5 py-3 rounded-[16px] text-start border-0 bg-transparent"
     >
-      <item.Icon
-        className={`shrink-0 h-[21px] w-[21px] ${item.active ? "text-primary" : "text-foreground/80"}`}
-        strokeWidth={1.6}
-      />
+      <span
+        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${
+          item.active ? "text-primary" : "text-foreground/80"
+        }`}
+        style={{ background: "hsl(var(--foreground) / 0.055)" }}
+      >
+        <item.Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
+      </span>
       <span className="flex-1 min-w-0 flex flex-col gap-1">
         <span className="text-[15px] font-medium leading-none text-foreground">
           {item.label}
@@ -285,10 +289,15 @@ const PlusMain = (p: PlusContentProps) => {
               type="button"
               onClick={t.onClick}
               aria-label={t.label}
-              className="kimi-tile flex h-[92px] w-full flex-col items-center justify-center gap-2 rounded-[20px] border-0 text-center"
+              className="kimi-tile flex h-[104px] w-full flex-col items-center justify-center gap-2.5 rounded-[22px] border-0 text-center"
               style={{ background: "hsl(var(--foreground) / 0.055)" }}
             >
-              <t.Icon className="h-[22px] w-[22px] text-foreground/85" strokeWidth={1.7} />
+              <span
+                className="grid h-11 w-11 place-items-center rounded-full"
+                style={{ background: "hsl(var(--foreground) / 0.06)" }}
+              >
+                <t.Icon className="h-[20px] w-[20px] text-foreground/85" strokeWidth={1.8} />
+              </span>
               <span className="px-1 text-[11.5px] font-medium leading-none text-foreground/85">
                 {t.label}
               </span>
@@ -301,7 +310,7 @@ const PlusMain = (p: PlusContentProps) => {
           {rows.map((it, i) => (
             <div key={it.id}>
               {i > 0 && (
-                <div className="mx-2 h-px" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
+                <div className="mx-3 h-px" style={{ background: "hsl(var(--foreground) / 0.05)" }} />
               )}
               <SheetRow item={it} expanded={it.id === "search" && searchOpen} />
               {it.id === "search" && (

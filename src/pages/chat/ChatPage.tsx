@@ -274,8 +274,16 @@ const ChatPage = () => {
       }
     };
 
-    const id = ric ? ric(run, { timeout: mobileNow ? 6500 : 3000 }) : window.setTimeout(run, mobileNow ? 4500 : 1500);
+    // The "+" sheet and connectors sheet are the most-tapped mobile actions —
+    // warm their chunks right after first paint so the first tap never waits.
+    const warmSheets = window.setTimeout(() => {
+      preloadPlusMenu();
+      void import("@/components/chat/IntegrationsSheet").catch(() => {});
+      void import("@/components/chat/integrations/IntegrationRow").catch(() => {});
+    }, 300);
+    const id = ric ? ric(run, { timeout: mobileNow ? 2500 : 1500 }) : window.setTimeout(run, mobileNow ? 1500 : 1000);
     return () => {
+      clearTimeout(warmSheets);
       if (ric && (window as any).cancelIdleCallback) (window as any).cancelIdleCallback(id);
       else clearTimeout(id as number);
     };
