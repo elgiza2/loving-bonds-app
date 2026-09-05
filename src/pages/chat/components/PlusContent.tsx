@@ -143,10 +143,8 @@ const PlusMain = (p: PlusContentProps) => {
     fn();
   };
 
-  const tiles: Tile[] = [
-    { id: "camera", label: "Camera", Icon: Aperture, onClick: closeThen(() => p.cameraInputRef.current?.click()) },
-    { id: "photos", label: "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
-  ];
+  // Mobile quick-attach squares.
+
 
   // Mobile quick-attach squares.
   const quickTiles: Tile[] = [
