@@ -143,9 +143,15 @@ const PlusMain = (p: PlusContentProps) => {
     fn();
   };
 
-  const tiles: Tile[] = [
+  // Mobile quick-attach squares.
+
+
+  // Mobile quick-attach squares.
+  const quickTiles: Tile[] = [
     { id: "camera", label: "Camera", Icon: Aperture, onClick: closeThen(() => p.cameraInputRef.current?.click()) },
-    { id: "photos", label: "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "photos", label: "Photos", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "files", label: "Local file", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
+    { id: "link", label: "Link", Icon: Link2, onClick: closeThen(() => p.onAddLink?.()) },
   ];
 
   type RowItem = {
@@ -159,6 +165,13 @@ const PlusMain = (p: PlusContentProps) => {
   };
 
   const rows: RowItem[] = [
+    {
+      id: "integrations",
+      label: "Integrations",
+      desc: "Connect apps and databases to automate your work",
+      Icon: Puzzle,
+      onClick: () => p.setPlusView("tools"),
+    },
     {
       id: "skills",
       label: "Skills",
@@ -176,49 +189,46 @@ const PlusMain = (p: PlusContentProps) => {
     },
   ];
 
+
   const SheetRow = ({ item, expanded }: { item: RowItem; expanded?: boolean }) => (
     <button
       data-no-neo
       type="button"
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3 px-2 py-2 rounded-[12px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3.5 px-3 py-3.5 rounded-[14px] text-start border-0 bg-transparent"
     >
-      <span
-        className={`shrink-0 grid place-items-center h-8 w-8 rounded-[10px] transition-colors duration-200 ${
-          item.active ? "bg-primary/10" : "bg-muted"
-        }`}
-      >
-        <item.Icon
-          className={`h-4 w-4 ${item.active ? "text-primary" : "text-foreground/75"}`}
-          strokeWidth={1.8}
-        />
-      </span>
-      <span className="flex-1 min-w-0 flex flex-col gap-[3px]">
-        <span className="text-[14px] font-medium leading-none text-foreground">
+      <item.Icon
+        className={`shrink-0 h-[21px] w-[21px] ${item.active ? "text-primary" : "text-foreground/80"}`}
+        strokeWidth={1.6}
+      />
+      <span className="flex-1 min-w-0 flex flex-col gap-1">
+        <span className="text-[15px] font-medium leading-none text-foreground">
           {item.label}
         </span>
         {item.desc && (
-          <span className="text-[11.5px] leading-none truncate text-muted-foreground">
+          <span className="text-[12px] leading-snug text-muted-foreground line-clamp-2">
             {item.desc}
           </span>
         )}
       </span>
       {item.value && (
         <span
-          className={`shrink-0 text-[11.5px] font-medium rounded-full px-2 py-[3px] ${
-            item.active ? "text-primary bg-primary/10" : "text-muted-foreground bg-muted"
+          className={`shrink-0 text-[12px] font-medium ${
+            item.active ? "text-primary" : "text-muted-foreground"
           }`}
         >
           {item.value}
         </span>
       )}
       <ChevronLeft
-        className={`shrink-0 h-[15px] w-[15px] text-muted-foreground/70 transition-transform duration-200 ${
+        className={`shrink-0 h-[16px] w-[16px] text-muted-foreground/60 transition-transform duration-200 ${
           expanded ? "-rotate-90" : "rotate-180"
         }`}
       />
     </button>
   );
+
+
 
   const SearchModeList = ({ compact }: { compact?: boolean }) => (
     <motion.div
@@ -258,38 +268,43 @@ const PlusMain = (p: PlusContentProps) => {
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
       {/* MOBILE — bottom sheet */}
-      <div className="md:hidden flex flex-col gap-1 pb-1.5" style={{ fontFamily: mobileFont }}>
+      <div className="md:hidden flex flex-col pb-1" style={{ fontFamily: mobileFont }}>
         <style>{`
-          .kimi-tile { transition: transform 160ms ease, opacity 160ms ease; }
-          .kimi-tile:active { transform: scale(0.97); opacity: 0.75; }
+          .kimi-tile { transition: transform 170ms cubic-bezier(0.32,0.72,0,1), background-color 170ms ease; }
+          .kimi-tile:active { transform: scale(0.955); background-color: hsl(var(--foreground) / 0.09); }
           .plus-row { transition: background-color 160ms ease; }
           .plus-row:active { background-color: hsl(var(--foreground) / 0.05); }
+          .kimi-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+          .kimi-scroll::-webkit-scrollbar { display: none; }
         `}</style>
 
-        <div className="px-2 pb-1 text-[11px] font-semibold uppercase text-muted-foreground">Add</div>
-        <div className="flex flex-col px-2 pb-2">
-          {tiles.map((t) => (
+        {/* Quick attach tiles — horizontally scrollable squares */}
+        <div className="kimi-scroll flex gap-2.5 overflow-x-auto px-3 pb-3 pt-1">
+          {quickTiles.map((t) => (
             <button
               key={t.id}
               data-no-neo
               type="button"
               onClick={t.onClick}
-              className="kimi-tile flex h-11 items-center gap-3 border-b border-border/60 px-2 text-start last:border-b-0"
+              aria-label={t.label}
+              className="kimi-tile flex h-[86px] w-[86px] shrink-0 flex-col items-center justify-center gap-2 rounded-[18px] border-0 text-center"
+              style={{ background: "hsl(var(--foreground) / 0.055)" }}
             >
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-muted"><t.Icon className="h-4 w-4 text-foreground/80" strokeWidth={1.7} /></span>
-              <span className="text-[13px] font-medium leading-none text-foreground">
+              <t.Icon className="h-[22px] w-[22px] text-foreground/85" strokeWidth={1.7} />
+              <span className="px-1 text-[11.5px] font-medium leading-none text-foreground/85">
                 {t.label}
               </span>
             </button>
           ))}
         </div>
 
-        <div className="mx-2 my-1 h-px" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
-
         {/* Rows */}
-        <div className="px-2 flex flex-col">
-          {rows.map((it) => (
+        <div className="flex flex-col px-2">
+          {rows.map((it, i) => (
             <div key={it.id}>
+              {i > 0 && (
+                <div className="mx-2 h-px" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
+              )}
               <SheetRow item={it} expanded={it.id === "search" && searchOpen} />
               {it.id === "search" && (
                 <AnimatePresence initial={false}>{searchOpen && <SearchModeList compact />}</AnimatePresence>
@@ -298,6 +313,7 @@ const PlusMain = (p: PlusContentProps) => {
           ))}
         </div>
       </div>
+
 
 
 
