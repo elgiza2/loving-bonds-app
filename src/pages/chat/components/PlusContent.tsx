@@ -148,6 +148,14 @@ const PlusMain = (p: PlusContentProps) => {
     { id: "photos", label: "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
   ];
 
+  // Mobile quick-attach squares.
+  const quickTiles: Tile[] = [
+    { id: "camera", label: "Camera", Icon: Aperture, onClick: closeThen(() => p.cameraInputRef.current?.click()) },
+    { id: "photos", label: "Photos", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "files", label: "Local file", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
+    { id: "link", label: "Link", Icon: Link2, onClick: closeThen(() => p.onAddLink?.()) },
+  ];
+
   type RowItem = {
     id: string;
     label: string;
@@ -159,6 +167,13 @@ const PlusMain = (p: PlusContentProps) => {
   };
 
   const rows: RowItem[] = [
+    {
+      id: "integrations",
+      label: "Integrations",
+      desc: "Connect apps and databases to automate your work",
+      Icon: Puzzle,
+      onClick: () => p.setPlusView("tools"),
+    },
     {
       id: "skills",
       label: "Skills",
@@ -175,6 +190,7 @@ const PlusMain = (p: PlusContentProps) => {
       onClick: () => setSearchOpen((v) => !v),
     },
   ];
+
 
   const SheetRow = ({ item, expanded }: { item: RowItem; expanded?: boolean }) => (
     <button
