@@ -167,6 +167,8 @@ interface ChatMessageProps {
   modelLabel?: string | null;
   /** Full metadata blob (used for trust/transparency insights). */
   metadata?: Record<string, any> | null;
+  /** The mode that produced this message; long-running modes keep their trace. */
+  mode?: import("@/pages/chat/chatConstants").ChatMode;
 
   /** Regenerate-branch navigation for assistant messages (prev/next versions). */
   branchInfo?: import("@/pages/chat/branching/branchHistory").BranchInfo | null;
@@ -819,6 +821,7 @@ const ChatMessage = ({
   reasoning,
   interrupted,
   metadata,
+  mode,
   branchInfo,
 
 }: ChatMessageProps) => {
@@ -1117,6 +1120,8 @@ const ChatMessage = ({
     if (!Array.isArray(raw)) return [];
     return raw.map((item: unknown) => String(item || "").trim()).filter(Boolean);
   }, [metadata]);
+  const keepSettledTrace =
+    mode === "code" || mode === "operator" || Boolean(metadata?.longRunId || metadata?.computerTaskId || metadata?.operatorRunId);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [canvasOpen, setCanvasOpen] = useState(false);
 
@@ -1523,6 +1528,7 @@ const ChatMessage = ({
         {role === "assistant" &&
           !isStreaming &&
           !showNarration &&
+          keepSettledTrace &&
           (!!thoughtsText || persistedThinkingSteps.length > 0) && (
             <ThinkingTrace text={thoughtsText} steps={persistedThinkingSteps} />
           )}

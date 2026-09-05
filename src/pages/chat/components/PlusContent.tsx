@@ -341,7 +341,7 @@ const PlusMain = (p: PlusContentProps) => {
                 p.setPlusView("skills");
               },
             },
-          ].map(({ icon: Icon, label, shortcut, onClick }) => (
+          ].map(({ icon: Icon, label, onClick }) => (
             <button
               key={label}
               onClick={onClick}
@@ -349,9 +349,6 @@ const PlusMain = (p: PlusContentProps) => {
             >
               <Icon className="w-[18px] h-[18px] text-foreground/70 shrink-0" strokeWidth={1.8} />
               <span className="flex-1 text-[13.5px] font-medium text-foreground truncate">{label}</span>
-              {shortcut && (
-                <span className="text-[11px] font-medium text-muted-foreground tracking-wide">{shortcut}</span>
-              )}
             </button>
           ))}
         </DesktopGroup>

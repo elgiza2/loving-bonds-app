@@ -79,9 +79,8 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
     }
     void refresh();
     const vh = window.innerHeight;
-    const expandedH = Math.min(vh * 0.8, vh - 72);
-    const collapsedH = Math.max(360, Math.min(vh * 0.55, expandedH));
-    setSize({ height: expandedH, collapsedY: Math.max(0, expandedH - collapsedH) });
+    const expandedH = Math.min(vh * 0.92, vh - 24);
+    setSize({ height: expandedH, collapsedY: 0 });
 
   }, [open]);
 
@@ -136,7 +135,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-[55] bg-transparent"
+            className="fixed inset-0 z-[55] bg-background/55"
             onClick={() => onOpenChange(false)}
           />
           <Suspense fallback={null}>
@@ -144,7 +143,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
               height={size.height}
                collapsedY={detail || apiDetail ? 0 : size.collapsedY}
               bottomOffset={0}
-              initialExpanded={false}
+              initialExpanded
                view={apiDetail ? `api-${apiDetail.id}` : detail ? `detail-${detail.id}` : tab}
               sheetKind="integrations"
               onClose={() => onOpenChange(false)}
@@ -165,7 +164,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: -24, opacity: 0 }}
                       transition={SLIDE}
-                      className="flex min-h-full flex-col"
+                      className="flex min-h-full flex-col px-1"
                     >
                       <ApiAppDetail
                         app={apiDetail}
@@ -210,11 +209,11 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                       transition={SLIDE}
                       className="flex min-h-full flex-col"
                     >
-                      <h2 className="px-2 pb-3 text-center text-[16px] font-semibold text-foreground">
+                      <h2 className="px-2 pb-4 text-start text-[20px] font-semibold text-foreground">
                         Integrations
                       </h2>
 
-                      <div data-connectors-search className="flex h-11 items-center gap-2 rounded-[16px] px-3.5">
+                      <div data-connectors-search className="flex h-12 items-center gap-2 rounded-[14px] border border-border bg-muted/45 px-3.5">
                         <Search className="h-4 w-4 shrink-0 text-foreground/65" />
                         <input
                           value={query}

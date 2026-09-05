@@ -301,10 +301,10 @@ export default function ComposerModelMenu({
                 <div className="fixed inset-0 z-[9998]" onClick={() => onOpenChange(false)} />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: pos.bottom != null ? 10 : -10, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: pos.bottom != null ? 10 : -10, scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 36, mass: 0.6 }}
+                  initial={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
+                  transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     position: "fixed",
                     ...(pos.bottom != null
@@ -313,14 +313,14 @@ export default function ComposerModelMenu({
                     left: Math.max(12, Math.min(pos.left ?? 12, window.innerWidth - (pos.width ?? 260) - 12)),
                     width: pos.width ?? 260,
                     maxHeight: pos.maxHeight,
-                    background: "var(--chat-claude-composer, #262627)",
-                    border: 0,
+                    background: "hsl(var(--popover))",
+                    border: "1px solid hsl(var(--border))",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
-                    boxShadow: "none",
+                    boxShadow: "0 18px 48px -24px hsl(var(--foreground) / 0.35)",
                     transformOrigin: pos.bottom != null ? "bottom center" : "top center",
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[26px] p-1.5"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[20px] p-2"
                 >
                   <div className="px-3 pb-1.5 pt-2 text-[11px] font-medium tracking-wide text-foreground/65">
                     Choose a model
@@ -354,7 +354,7 @@ export default function ComposerModelMenu({
                           marginTop: 0,
                           opacity: locked ? 0.5 : 1,
                         }}
-                        className="flex w-full items-center gap-2.5 rounded-[20px] px-3 py-2.5 text-right transition-colors tier-row"
+                        className="flex w-full items-center gap-2.5 rounded-[14px] px-3 py-3 text-start transition-colors tier-row"
                       >
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
