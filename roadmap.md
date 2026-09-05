@@ -12,3 +12,13 @@
 - [x] Clean up settings, referrals, mail, and pricing layouts; rewrite the centered empty-state copy
 - [x] Kashier: keys stored, checkout redirect fixed, webhook + activation
 - [x] Verify public mobile/desktop flows; authenticated end-to-end verification is unavailable for the externally managed Supabase project
+- [ ] Rebuild the mobile composer as a compact expanding Gemini-style pill
+- [ ] Limit the Plus menu to images, files, and skills; simplify its opening behavior
+- [ ] Redesign the model picker and integrations as lightweight single-surface menus
+- [ ] Replace the mobile push sidebar with a full-screen overlay page
+- [ ] Restyle user messages and place copy/edit controls below the selected message
+- [ ] Split thinking behavior: transient for normal chat, permanently detailed for computer/code/long tasks
+- [ ] Move the Megsy mark below assistant feedback controls
+- [ ] Add the animated blue lower-page glow for empty and active long-running/media states
+- [ ] Hide the header upgrade action after the first message
+- [ ] Verify empty, active chat, menus, and long-task states on mobile
