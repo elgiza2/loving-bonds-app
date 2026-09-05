@@ -1156,7 +1156,8 @@ const AppSidebar = ({
       </div>
 
       <div
-        data-mobile-sidebar-footer="true"
+        data-mobile-sidebar-fixed-footer="true"
+        dir="ltr"
         className="z-20 flex shrink-0 items-center gap-2 border-t border-border/40 bg-background px-4 pt-3"
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
       >
@@ -1182,6 +1183,7 @@ const AppSidebar = ({
         <button
           type="button"
           onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
+          dir={language === "ar-eg" ? "rtl" : "ltr"}
           className="ms-auto flex min-w-0 items-center gap-2 rounded-full text-foreground"
         >
           <span className="max-w-[110px] truncate text-[14px] font-medium">

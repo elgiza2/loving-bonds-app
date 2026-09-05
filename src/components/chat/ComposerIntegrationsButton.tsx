@@ -67,7 +67,10 @@ export function ComposerIntegrationsButton({ onClick, label = "Integrations" }: 
     <Button
       type="button"
       onClick={onClick}
-      onPointerDown={prefetchIntegrationsSheet}
+      onPointerDown={(event) => {
+        event.preventDefault();
+        prefetchIntegrationsSheet();
+      }}
       aria-label={label}
       variant="ghost"
       size="icon-sm"
