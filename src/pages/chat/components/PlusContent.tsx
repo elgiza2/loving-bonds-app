@@ -146,12 +146,10 @@ const PlusMain = (p: PlusContentProps) => {
   // Mobile quick-attach squares.
 
 
-  // Mobile quick-attach squares.
+  // Mobile quick-attach squares — images + files only.
   const quickTiles: Tile[] = [
-    { id: "camera", label: "Camera", Icon: Aperture, onClick: closeThen(() => p.cameraInputRef.current?.click()) },
-    { id: "photos", label: "Photos", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
-    { id: "files", label: "Local file", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
-    { id: "link", label: "Link", Icon: Link2, onClick: closeThen(() => p.onAddLink?.()) },
+    { id: "photos", label: "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "files", label: "Files", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
   ];
 
   type RowItem = {
@@ -166,18 +164,18 @@ const PlusMain = (p: PlusContentProps) => {
 
   const rows: RowItem[] = [
     {
-      id: "integrations",
-      label: "Integrations",
-      desc: "Connect apps and databases to automate your work",
-      Icon: Puzzle,
-      onClick: () => p.setPlusView("tools"),
-    },
-    {
       id: "skills",
       label: "Skills",
-      desc: "Reusable skills for specific tasks",
+      desc: "Turn skills on or off, or create a new one",
       Icon: Blocks,
-      onClick: closeThen(() => p.navigate("/settings/skills")),
+      onClick: () => p.setPlusView("skills"),
+    },
+    {
+      id: "integrations",
+      label: "Integrations",
+      desc: "Connect apps and databases",
+      Icon: Puzzle,
+      onClick: () => p.setPlusView("tools"),
     },
     {
       id: "search",
@@ -279,7 +277,7 @@ const PlusMain = (p: PlusContentProps) => {
         `}</style>
 
         {/* Quick attach tiles — horizontally scrollable squares */}
-        <div className="kimi-scroll flex gap-2.5 overflow-x-auto px-3 pb-3 pt-1">
+        <div className="grid grid-cols-2 gap-2.5 px-3 pb-3 pt-1">
           {quickTiles.map((t) => (
             <button
               key={t.id}
@@ -287,7 +285,7 @@ const PlusMain = (p: PlusContentProps) => {
               type="button"
               onClick={t.onClick}
               aria-label={t.label}
-              className="kimi-tile flex h-[86px] w-[86px] shrink-0 flex-col items-center justify-center gap-2 rounded-[18px] border-0 text-center"
+              className="kimi-tile flex h-[92px] w-full flex-col items-center justify-center gap-2 rounded-[20px] border-0 text-center"
               style={{ background: "hsl(var(--foreground) / 0.055)" }}
             >
               <t.Icon className="h-[22px] w-[22px] text-foreground/85" strokeWidth={1.7} />
@@ -882,6 +880,20 @@ const PlusSkillsBody = (p: PlusContentProps) => (
       <span className="flex-1 text-[12.5px] text-brand-muted leading-snug">
         Toggle skills on. The AI picks which to use.
       </span>
+      <button
+        onClick={() => {
+          p.setPlusMenuOpen(false);
+          p.setPlusView("main");
+          window.dispatchEvent(new CustomEvent("megsy:skill-draft"));
+        }}
+        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold text-white"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, hsl(212 96% 56%), hsl(232 92% 60%), hsl(262 88% 64%))",
+        }}
+      >
+        <Plus className="w-3.5 h-3.5" strokeWidth={2.4} /> إنشاء مهارة
+      </button>
       <button
         onClick={() => {
           p.setPlusMenuOpen(false);

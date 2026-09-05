@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { m as motion } from "framer-motion";
 import { t as uiT, useUserLang } from "@/lib/authI18n";
+import MegsyStarGradient from "@/components/branding/MegsyStarGradient";
 
 interface DesktopGreetingProps {
   userName: string | null | undefined;
@@ -44,6 +45,14 @@ export const DesktopGreeting = (_: DesktopGreetingProps) => {
           className="relative flex flex-col items-center text-center max-w-4xl mx-auto"
         >
           <motion.div
+            initial={{ opacity: 0, scale: 0.86 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-3 md:mb-4"
+          >
+            <MegsyStarGradient className="h-9 w-9 md:h-10 md:w-10" />
+          </motion.div>
+          <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
@@ -51,12 +60,12 @@ export const DesktopGreeting = (_: DesktopGreetingProps) => {
           >
             <h1
               data-greeting
-              dir="ltr"
-              className="max-w-3xl text-center text-[26px] font-semibold leading-tight text-foreground md:text-[32px] lg:text-[36px]"
+              className="max-w-3xl text-center text-[24px] font-normal leading-snug tracking-[-0.01em] text-foreground md:text-[30px] lg:text-[34px]"
             >
               {tagline}
             </h1>
           </motion.div>
+
         </motion.div>
       </div>
     </>
