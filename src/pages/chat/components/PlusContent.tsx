@@ -258,38 +258,43 @@ const PlusMain = (p: PlusContentProps) => {
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
       {/* MOBILE — bottom sheet */}
-      <div className="md:hidden flex flex-col gap-1 pb-1.5" style={{ fontFamily: mobileFont }}>
+      <div className="md:hidden flex flex-col pb-1" style={{ fontFamily: mobileFont }}>
         <style>{`
-          .kimi-tile { transition: transform 160ms ease, opacity 160ms ease; }
-          .kimi-tile:active { transform: scale(0.97); opacity: 0.75; }
+          .kimi-tile { transition: transform 170ms cubic-bezier(0.32,0.72,0,1), background-color 170ms ease; }
+          .kimi-tile:active { transform: scale(0.955); background-color: hsl(var(--foreground) / 0.09); }
           .plus-row { transition: background-color 160ms ease; }
           .plus-row:active { background-color: hsl(var(--foreground) / 0.05); }
+          .kimi-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+          .kimi-scroll::-webkit-scrollbar { display: none; }
         `}</style>
 
-        <div className="px-2 pb-1 text-[11px] font-semibold uppercase text-muted-foreground">Add</div>
-        <div className="flex flex-col px-2 pb-2">
-          {tiles.map((t) => (
+        {/* Quick attach tiles — horizontally scrollable squares */}
+        <div className="kimi-scroll flex gap-2.5 overflow-x-auto px-3 pb-3 pt-1">
+          {quickTiles.map((t) => (
             <button
               key={t.id}
               data-no-neo
               type="button"
               onClick={t.onClick}
-              className="kimi-tile flex h-11 items-center gap-3 border-b border-border/60 px-2 text-start last:border-b-0"
+              aria-label={t.label}
+              className="kimi-tile flex h-[86px] w-[86px] shrink-0 flex-col items-center justify-center gap-2 rounded-[18px] border-0 text-center"
+              style={{ background: "hsl(var(--foreground) / 0.055)" }}
             >
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-muted"><t.Icon className="h-4 w-4 text-foreground/80" strokeWidth={1.7} /></span>
-              <span className="text-[13px] font-medium leading-none text-foreground">
+              <t.Icon className="h-[22px] w-[22px] text-foreground/85" strokeWidth={1.7} />
+              <span className="px-1 text-[11.5px] font-medium leading-none text-foreground/85">
                 {t.label}
               </span>
             </button>
           ))}
         </div>
 
-        <div className="mx-2 my-1 h-px" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
-
         {/* Rows */}
-        <div className="px-2 flex flex-col">
-          {rows.map((it) => (
+        <div className="flex flex-col px-2">
+          {rows.map((it, i) => (
             <div key={it.id}>
+              {i > 0 && (
+                <div className="mx-2 h-px" style={{ background: "hsl(var(--foreground) / 0.06)" }} />
+              )}
               <SheetRow item={it} expanded={it.id === "search" && searchOpen} />
               {it.id === "search" && (
                 <AnimatePresence initial={false}>{searchOpen && <SearchModeList compact />}</AnimatePresence>
@@ -298,6 +303,7 @@ const PlusMain = (p: PlusContentProps) => {
           ))}
         </div>
       </div>
+
 
 
 
