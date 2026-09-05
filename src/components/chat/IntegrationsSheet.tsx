@@ -12,6 +12,7 @@ import {
 } from "@/lib/integrationBackend";
 import EmptyConnectors from "./integrations/EmptyConnectors";
 import type { ApiApp } from "@/lib/apiApps/types";
+import { useUserLang } from "@/lib/authI18n";
 
 const DraggablePlusSheet = lazy(() =>
   import("@/pages/chat/components/DraggablePlusSheet").then((m) => ({
@@ -51,6 +52,8 @@ const SLIDE = { duration: 0.22, ease: [0.32, 0.72, 0, 1] as const };
  * menu: opens compact, expands on scroll, drag anywhere to dismiss.
  */
 export default function IntegrationsSheet({ open, onOpenChange }: Props) {
+  const language = useUserLang();
+  const isArabic = language === "ar";
   const [connected, setConnected] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<Tab>("tools");
@@ -155,7 +158,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                   </div>
                 }
               >
-              <div className="flex min-h-full flex-col">
+              <div dir={isArabic ? "rtl" : "ltr"} className="flex min-h-full flex-col">
                 <AnimatePresence mode="wait" initial={false}>
                   {apiDetail ? (
                     <motion.div
@@ -210,7 +213,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                       className="flex min-h-full flex-col"
                     >
                       <h2 className="px-2 pb-4 text-start text-[20px] font-semibold text-foreground">
-                        Integrations
+                        {isArabic ? "التكاملات" : "Integrations"}
                       </h2>
 
                       <div data-connectors-search className="flex h-12 items-center gap-2 rounded-[14px] border border-border bg-muted/45 px-3.5">
@@ -218,7 +221,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
                         <input
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          placeholder="Search for an app"
+                           placeholder={isArabic ? "ابحث عن تطبيق" : "Search for an app"}
                           className="h-full w-full text-[14px] text-foreground outline-none placeholder:text-foreground/65"
                           style={{
                             border: 0,

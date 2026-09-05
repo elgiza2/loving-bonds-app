@@ -13,7 +13,6 @@ import { m as motion, AnimatePresence } from "framer-motion";
 import ModelPickerDropdown from "@/components/model-picker/ModelPickerDropdown";
 import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 import { getAgentById } from "@/lib/agentRegistry";
-import { TypingAnimation } from "@/components/ui/typing-animation";
 import ComposerIntegrationsButton from "@/components/chat/ComposerIntegrationsButton";
 import IntegrationsSheet from "@/components/chat/IntegrationsSheet";
 import ComposerVoiceWave from "@/components/chat/ComposerVoiceWave";
@@ -100,15 +99,7 @@ const AnimatedInput = ({
   const currentLang = useUserLang();
   const deferredValue = useDeferredValue(value);
   const navigate = useNavigate();
-  const defaultPlaceholders = useMemo(
-    () => [
-      uiT("placeholderAsk"),
-      uiT("placeholderProject"),
-      uiT("placeholderAllInOne"),
-      uiT("placeholderType"),
-    ],
-    [currentLang],
-  );
+  const shortPlaceholder = currentLang === "ar" ? "اسأل ميغسي" : "Ask Megsy";
 
   /**
    * Intercept bare slash commands (e.g. "/clear", "/docs", "/new").
@@ -130,20 +121,7 @@ const AnimatedInput = ({
     if (tryRunSlashCommand()) return;
     onSend();
   }, [tryRunSlashCommand, onSend]);
-  const items = useMemo(
-    () =>
-      placeholders && placeholders.length > 0
-        ? placeholders
-        : defaultPlaceholders,
-    [placeholders, defaultPlaceholders],
-  );
-  const [placeholderIndex, setPlaceholderIndex] = useState(() =>
-    Math.floor(Math.random() * items.length),
-  );
-  const [displayedPlaceholder, setDisplayedPlaceholder] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const placeholderTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const placeholderIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const valueRef = useRef(value);
   const [mentionOpen, setMentionOpen] = useState(false);
   const [mentionQuery, setMentionQuery] = useState("");
@@ -192,20 +170,6 @@ const AnimatedInput = ({
     const agent = getAgentById(activeAgent);
     return agent?.models || [];
   }, [activeAgent, lastSelectedAgent]);
-
-  // Static placeholder that quietly rotates every few seconds (no per-char typing,
-  // which previously caused 20fps re-renders and a "reloading" feel while typing/streaming).
-  useEffect(() => {
-    setDisplayedPlaceholder(items[placeholderIndex] || defaultPlaceholders[0]);
-  }, [placeholderIndex, items]);
-
-  useEffect(() => {
-    if (value) return; // pause rotation while user is typing
-    const id = setInterval(() => {
-      setPlaceholderIndex((prev) => (prev + 1) % items.length);
-    }, 5000);
-    return () => clearInterval(id);
-  }, [value, items]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Escape" && (mentionOpen || modelPickerOpen)) {
@@ -409,21 +373,21 @@ const AnimatedInput = ({
 
             <div className={`relative ${listening ? "hidden" : ""}`}>
 
-              {!value && displayedPlaceholder && (
+              {!value && (
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 flex items-start px-1 pt-2 text-[15.5px] md:text-sm text-foreground/90 leading-relaxed overflow-hidden"
                 >
                   <AnimatePresence mode="wait">
                     <motion.span
-                      key={displayedPlaceholder}
+                      key={shortPlaceholder}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
                       transition={{ duration: 0.35 }}
                       className="truncate"
                     >
-                      {displayedPlaceholder}
+                      {shortPlaceholder}
                     </motion.span>
                   </AnimatePresence>
                 </div>

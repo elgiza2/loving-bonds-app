@@ -20,7 +20,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { m as motion, AnimatePresence } from "framer-motion";
 import MegsyStarBrand from "@/components/branding/MegsyStar";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -2066,7 +2065,6 @@ const ChatMessage = ({
                   )}
                 </AIMessageAction>
               </AIMessageActions>
-              <BrandLogo className="ms-1 h-3.5 w-3.5 opacity-70" aria-label="Megsy" />
               </div>
             )}
 
