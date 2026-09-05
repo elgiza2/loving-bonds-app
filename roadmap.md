@@ -28,4 +28,4 @@
 - [x] Lock the mobile sidebar footer to one LTR layout and stop the composer area blocking chat content
 - [x] Match the mobile sidebar footer controls to the reference's compact physical dimensions
 - [x] Fix the RTL spacing override and pin the account group to the footer's far right
-- [ ] Rebuild and verify mobile starter chips, the embedded Megsy Computer surface, and permanent tool traces
+- [x] Rebuild and verify mobile starter chips, the embedded Megsy Computer surface, and permanent tool traces
