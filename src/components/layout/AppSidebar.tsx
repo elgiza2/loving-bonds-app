@@ -123,7 +123,7 @@ const AppSidebar = ({
   underlay = false,
   mobileSide,
 }: AppSidebarProps) => {
-  useUserLang();
+  const language = useUserLang();
   const navigate = useNavigate();
   const location = useLocation();
   const activeWs = useActiveWorkspaceId();
@@ -136,7 +136,6 @@ const AppSidebar = ({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   // The nav list is always fully expanded — the old "More" toggle is gone.
   const [moreOpen, setMoreOpen] = useState(true);
-  const [mobileScrolled, setMobileScrolled] = useState(false);
 
   // When the sidebar closes (mobile overlay OR underlay), collapse the
   // "More" section so reopening always starts in the compact state.

@@ -288,7 +288,7 @@ const PlusMain = (p: PlusContentProps) => {
               </span>
             </button>
           ))}
-          {rows.map((it, i) => (
+          {rows.map((it) => (
             <div key={it.id}>
               <SheetRow item={it} expanded={it.id === "search" && searchOpen} />
               {it.id === "search" && (

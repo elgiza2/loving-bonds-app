@@ -23,4 +23,4 @@
 - [x] Hide the header upgrade action after the first message
 - [x] Verify empty, active chat, menus, and long-task states on mobile
 - [x] Match the compact Plus list, shorten integrations, and repair mobile composer typing
-- [ ] Pin the mobile sidebar header and rebuild its fixed account footer
+- [x] Pin the mobile sidebar header and rebuild its fixed account footer
