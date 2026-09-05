@@ -48,6 +48,7 @@ import {
 import type { Integration } from "@/lib/integrationsData";
 import { IOS_SPRING as iosSpring } from "../constants/motion";
 import { glassModelMenu } from "@/components/model-picker/glassModelMenuStyles";
+import { useUserLang } from "@/lib/authI18n";
 
 type PlusView = "main" | "models" | "skills" | "music" | "timer" | "tools";
 
@@ -133,6 +134,8 @@ const DesktopGroup = ({ title, children }: { title?: string; children: React.Rea
 );
 
 const PlusMain = (p: PlusContentProps) => {
+  const language = useUserLang();
+  const isArabic = language === "ar-eg";
   type Tile = { id: string; label: string; Icon: any; onClick: () => void };
   const [searchMode, setSearchMode] = useWebSearchMode();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -148,8 +151,8 @@ const PlusMain = (p: PlusContentProps) => {
 
   // Mobile quick-attach squares — images + files only.
   const quickTiles: Tile[] = [
-    { id: "photos", label: "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
-    { id: "files", label: "Files", Icon: FileUp, onClick: closeThen(() => p.fileInputRef.current?.click()) },
+    { id: "photos", label: isArabic ? "الصور" : "Images", Icon: Images, onClick: closeThen(() => p.imageInputRef.current?.click()) },
+    { id: "files", label: isArabic ? "ملفات" : "Files", Icon: Paperclip, onClick: closeThen(() => p.fileInputRef.current?.click()) },
   ];
 
   type RowItem = {
@@ -165,8 +168,7 @@ const PlusMain = (p: PlusContentProps) => {
   const rows: RowItem[] = [
     {
       id: "skills",
-      label: "Skills",
-      desc: "Turn skills on or off, or create a new one",
+      label: isArabic ? "المهارات" : "Skills",
       Icon: Blocks,
       onClick: () => p.setPlusView("skills"),
     },
@@ -178,18 +180,18 @@ const PlusMain = (p: PlusContentProps) => {
       data-no-neo
       type="button"
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3 px-2.5 py-3 rounded-[16px] text-start border-0 bg-transparent"
+      className="plus-row flex min-h-[68px] w-full items-center gap-3 border-0 bg-transparent px-3 py-2 text-start"
     >
       <span
-        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${
+        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full ${
           item.active ? "text-primary" : "text-foreground/80"
         }`}
         style={{ background: "hsl(var(--foreground) / 0.055)" }}
       >
-        <item.Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
+        <item.Icon className="h-[21px] w-[21px]" strokeWidth={1.8} />
       </span>
       <span className="flex-1 min-w-0 flex flex-col gap-1">
-        <span className="text-[15px] font-medium leading-none text-foreground">
+        <span className="text-[16px] font-medium leading-none text-foreground">
           {item.label}
         </span>
         {item.desc && (
@@ -255,7 +257,7 @@ const PlusMain = (p: PlusContentProps) => {
   return (
     <motion.div key="main" {...fadeProps(-8)} className="flex flex-col">
       {/* MOBILE — bottom sheet */}
-      <div className="md:hidden flex flex-col pb-1" style={{ fontFamily: mobileFont }}>
+       <div dir={isArabic ? "rtl" : "ltr"} className="md:hidden flex flex-col py-2" style={{ fontFamily: mobileFont }}>
         <style>{`
           .kimi-tile { transition: transform 170ms cubic-bezier(0.32,0.72,0,1), background-color 170ms ease; }
           .kimi-tile:active { transform: scale(0.955); background-color: hsl(var(--foreground) / 0.09); }
@@ -265,9 +267,8 @@ const PlusMain = (p: PlusContentProps) => {
           .kimi-scroll::-webkit-scrollbar { display: none; }
         `}</style>
 
-        <div className="px-4 pb-2 pt-1 text-start text-[17px] font-semibold text-foreground">Add</div>
-        {/* Images and files are the only quick attachments. */}
-        <div className="grid grid-cols-2 gap-2 px-3 pb-2 pt-1">
+        {/* A compact Gemini-style list: images, files and skills only. */}
+        <div className="flex flex-col px-2">
           {quickTiles.map((t) => (
             <button
               key={t.id}
@@ -275,27 +276,20 @@ const PlusMain = (p: PlusContentProps) => {
               type="button"
               onClick={t.onClick}
               aria-label={t.label}
-              className="kimi-tile flex h-[84px] w-full flex-col items-center justify-center gap-2 rounded-[18px] border border-border/60 bg-muted/45 text-center"
+              className="kimi-tile flex min-h-[68px] w-full items-center gap-3 border-0 bg-transparent px-3 py-2 text-start"
             >
               <span
-                className="grid h-9 w-9 place-items-center rounded-full bg-background"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-muted"
               >
-                <t.Icon className="h-[20px] w-[20px] text-foreground/85" strokeWidth={1.8} />
+                <t.Icon className="h-[21px] w-[21px] text-foreground/85" strokeWidth={1.8} />
               </span>
-              <span className="px-1 text-[11.5px] font-medium leading-none text-foreground/85">
+              <span className="flex-1 text-[16px] font-medium leading-none text-foreground">
                 {t.label}
               </span>
             </button>
           ))}
-        </div>
-
-        {/* Rows */}
-        <div className="flex flex-col px-2">
           {rows.map((it, i) => (
             <div key={it.id}>
-              {i > 0 && (
-                <div className="mx-3 h-px" style={{ background: "hsl(var(--foreground) / 0.05)" }} />
-              )}
               <SheetRow item={it} expanded={it.id === "search" && searchOpen} />
               {it.id === "search" && (
                 <AnimatePresence initial={false}>{searchOpen && <SearchModeList compact />}</AnimatePresence>
