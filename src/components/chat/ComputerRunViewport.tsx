@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import MegsyStar from "@/components/branding/MegsyStar";
+import { Button } from "@/components/ui/button";
 
 interface ComputerRunViewportProps {
   url?: string | null;
@@ -23,10 +24,11 @@ export default function ComputerRunViewport({
       className="relative w-full overflow-hidden rounded-3xl border border-border/40 bg-card/40 shadow-sm"
       aria-label="كومبيوتر ميغسي"
     >
-      <button
+      <Button
         type="button"
         onClick={() => setExpanded((value) => !value)}
-        className="flex h-9 w-full items-center gap-2 border-b border-border/30 px-3 text-start"
+        variant="ghost"
+        className="flex h-9 w-full items-center gap-2 rounded-none border-b border-border/30 px-3 text-start shadow-none hover:bg-foreground/[0.03]"
         aria-expanded={expanded}
       >
         <MegsyStar
@@ -39,7 +41,7 @@ export default function ComputerRunViewport({
           className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
           aria-hidden
         />
-      </button>
+      </Button>
 
       <div
         className={`relative w-full overflow-hidden bg-muted/20 transition-[height] duration-500 ease-out ${expanded ? "h-[min(52vh,420px)]" : "h-44"}`}
