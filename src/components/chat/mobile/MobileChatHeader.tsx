@@ -246,7 +246,7 @@ export default function MobileChatHeader({
         {/* Caller-provided actions (e.g. an upgrade CTA). */}
         {rightSlot}
 
-        {chatUserId && (
+        {chatUserId && !hasConversation && (
           <UpgradePlanButton variant="compact" hideCredits />
         )}
 

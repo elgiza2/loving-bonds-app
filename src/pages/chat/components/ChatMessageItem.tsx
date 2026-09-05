@@ -188,6 +188,7 @@ const ChatMessageItemImpl = ({
           timing={msg.timing}
           modelLabel={msg.modelLabel}
           metadata={(msg as any).metadata}
+          mode={msg.mode}
 
           liked={msg.liked}
           onLikeMessage={handleLikeMessage}

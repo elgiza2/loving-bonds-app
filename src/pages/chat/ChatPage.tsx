@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { useState, useRef, useEffect, useCallback, Suspense, lazy, type FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { animate, m as motion, useMotionValue, useTransform } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { toast } from "sonner";
 import { getActiveComputerRun } from "@/lib/computer/activeRun";
 
@@ -20,7 +20,6 @@ import { getCachedUser } from "@/lib/cachedUser";
 import { warmEdgeFunctions } from "@/lib/warmEdgeFunctions";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
-import { useUserLang } from "@/lib/authI18n";
 import { isPaidUser } from "@/lib/subscriptionGating";
 
 // Background job helpers and one-off lib utilities that are still referenced
@@ -51,45 +50,6 @@ import { useChatMessages } from "./hooks/useChatMessages";
 import { useConversationMeta } from "./hooks/useConversationMeta";
 import { AuiProvider } from "./adapters/aui/AuiProvider";
 
-const RTL_UI_LANGS = new Set(["ar", "ar-eg", "he", "fa"]);
-const SIDEBAR_EDGE_SWIPE_ZONE = 36;
-/** A sideways swipe must not steal the gesture from a horizontal scroller
- *  (mode chips, code blocks, tables) or from an element that drags itself.
- *  A scroller only blocks when it can actually scroll in the swipe direction —
- *  a carousel resting at its start must not kill the sidebar gesture. */
-function blocksSidebarSwipe(target: EventTarget | null, startX: number, rtl: boolean): boolean {
-  let node = target as HTMLElement | null;
-  // Anywhere on the surface may start the gesture, but the edge strip always wins.
-  const nearEdge = rtl ? startX >= window.innerWidth - SIDEBAR_EDGE_SWIPE_ZONE : startX <= SIDEBAR_EDGE_SWIPE_ZONE;
-  if (nearEdge) return false;
-  while (node && node !== document.body) {
-    if (node.dataset?.noSidebarSwipe === "true") return true;
-    if (node instanceof HTMLInputElement || node instanceof HTMLTextAreaElement) return true;
-    const style = window.getComputedStyle(node);
-    const overflowX = style.overflowX;
-    if (
-      (overflowX === "auto" || overflowX === "scroll") &&
-      node.scrollWidth > node.clientWidth + 4
-    ) {
-      const max = node.scrollWidth - node.clientWidth;
-      const offset = Math.abs(node.scrollLeft);
-      // Opening swipe goes right in LTR (needs room to scroll back left) and
-      // left in RTL (needs room left ahead of the current offset).
-      const canScrollInSwipeDirection = rtl ? max - offset > 1 : offset > 1;
-      if (canScrollInSwipeDirection) return true;
-    }
-    if (style.touchAction === "none" || style.touchAction === "pan-x") return true;
-    node = node.parentElement;
-  }
-  return false;
-}
-
-const SIDEBAR_OPEN_SNAP = 0.22;
-const SIDEBAR_CLOSE_SNAP = 0.64;
-const SIDEBAR_FLING_VELOCITY = 520;
-const SIDEBAR_PUSH_SPRING = { type: "spring" as const, stiffness: 240, damping: 34, mass: 1.05 };
-
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 const normalizeAttachedUrls = (value: string) =>
   Array.from(
     new Set(
@@ -391,106 +351,6 @@ const ChatPage = () => {
   const { plusMenuOpen, setPlusMenuOpen, plusView, setPlusView } =
     usePlusMenu();
   const isMobileViewport = useIsMobile();
-  const userLang = useUserLang();
-  // Sidebar reveal width for the Claude-style push (mobile). The chat surface
-  // translates by this many pixels when the sidebar is opened.
-  const [sidebarRevealX, setSidebarRevealX] = useState(0);
-  const isRtlUi = RTL_UI_LANGS.has(userLang);
-  const sidebarPushX = isRtlUi ? -sidebarRevealX : sidebarRevealX;
-  const sidebarX = useMotionValue(0);
-  const sidebarProgress = useTransform(sidebarX, (latest) =>
-    sidebarRevealX > 0 ? clamp(Math.abs(latest) / sidebarRevealX, 0, 1) : 0,
-  );
-  const sidebarScale = useTransform(sidebarProgress, [0, 1], [1, 0.94]);
-  const sidebarRadius = useTransform(sidebarProgress, [0, 1], [0, 32]);
-  const sidebarShadow = useTransform(sidebarProgress, (progress) =>
-    progress > 0.02
-      ? `0 30px 90px -20px rgba(0,0,0,${0.36 + progress * 0.34}), 0 0 0 1px rgba(255,255,255,${progress * 0.06})`
-      : "0 0 0 rgba(0,0,0,0)",
-  );
-  const sidebarAnimationRef = useRef<{ stop: () => void } | null>(null);
-  const edgeDraggingSidebarRef = useRef(false);
-  const edgePointerRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    lastX: number;
-    started: boolean;
-  } | null>(null);
-  const animateSidebarTo = useCallback(
-    (open: boolean) => {
-      sidebarAnimationRef.current?.stop();
-      sidebarAnimationRef.current = animate(
-        sidebarX,
-        isMobileViewport && open ? sidebarPushX : 0,
-        open ? SIDEBAR_PUSH_SPRING : { type: "spring", stiffness: 360, damping: 42, mass: 0.9 },
-      );
-    },
-    [isMobileViewport, sidebarPushX, sidebarX],
-  );
-
-  useEffect(() => {
-    if (edgeDraggingSidebarRef.current) return;
-    animateSidebarTo(sidebarOpen);
-    return () => sidebarAnimationRef.current?.stop();
-  }, [animateSidebarTo, sidebarOpen]);
-
-  const beginSidebarEdgeDrag = useCallback((pointerId: number, x: number, y: number) => {
-    if (!isMobileViewport || sidebarOpenRef.current) return;
-    edgePointerRef.current = { pointerId, startX: x, startY: y, lastX: x, started: false };
-  }, [isMobileViewport]);
-
-  const updateSidebarEdgeDrag = useCallback((pointerId: number, x: number, y: number) => {
-    const drag = edgePointerRef.current;
-    if (!drag || drag.pointerId !== pointerId) return false;
-    const dx = x - drag.startX;
-    const dy = Math.abs(y - drag.startY);
-    const directionalDistance = isRtlUi ? -dx : dx;
-    drag.lastX = x;
-
-    if (dy > 42 || directionalDistance < -10) {
-      edgePointerRef.current = null;
-      edgeDraggingSidebarRef.current = false;
-      animateSidebarTo(false);
-      return false;
-    }
-
-    if (!drag.started && directionalDistance > 10 && dy < 22) {
-      drag.started = true;
-      edgeDraggingSidebarRef.current = true;
-      sidebarAnimationRef.current?.stop();
-      setSidebarOpen(true);
-    }
-
-    if (drag.started) {
-      const nextDistance = clamp(directionalDistance, 0, sidebarRevealX);
-      sidebarX.set(isRtlUi ? -nextDistance : nextDistance);
-      return true;
-    }
-
-    return false;
-  }, [animateSidebarTo, isRtlUi, setSidebarOpen, sidebarRevealX, sidebarX]);
-
-  const endSidebarEdgeDrag = useCallback((pointerId: number) => {
-    const drag = edgePointerRef.current;
-    if (!drag || drag.pointerId !== pointerId) return;
-    if (drag.started) {
-      const dx = drag.lastX - drag.startX;
-      const directionalDistance = isRtlUi ? -dx : dx;
-      const shouldOpen = directionalDistance >= sidebarRevealX * SIDEBAR_OPEN_SNAP;
-      edgeDraggingSidebarRef.current = false;
-      setSidebarOpen(shouldOpen);
-      animateSidebarTo(shouldOpen);
-    }
-    edgePointerRef.current = null;
-  }, [animateSidebarTo, isRtlUi, setSidebarOpen, sidebarRevealX]);
-  useEffect(() => {
-    const compute = () =>
-      setSidebarRevealX(Math.min(Math.round(window.innerWidth * 0.82), 320));
-    compute();
-    window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
-  }, []);
   // Edge-swipe to open the sidebar is owned by MobilePushShell.
   // A second copy used to run here and fought it for every touch,
   // which made buttons need two taps. Keep exactly one gesture owner.
@@ -890,19 +750,9 @@ const ChatPage = () => {
     return () => setPromoBannerHidden(false);
   }, [conversationId, messages.length, setPromoBannerHidden]);
 
-  // Reactive aurora: map chat activity onto a body[data-chat-state] so the
-  // background colors visibly respond when the user sends a message, the
-  // assistant is thinking, or media is being generated.
+  // Expose only meaningful work states to the lightweight blue glow.
   useEffect(() => {
     const body = document.body;
-    if (isMobileViewport) {
-      body.removeAttribute("data-chat-state");
-      body.setAttribute("data-chat-mode", chatMode || "normal");
-      return () => {
-        body.removeAttribute("data-chat-state");
-        body.removeAttribute("data-chat-mode");
-      };
-    }
     let state: "idle" | "sending" | "thinking" | "generating" = "idle";
     if (isThinking) state = "thinking";
     else if (isLoading) {
@@ -918,7 +768,7 @@ const ChatPage = () => {
       body.removeAttribute("data-chat-state");
       body.removeAttribute("data-chat-mode");
     };
-  }, [isLoading, isThinking, chatMode, isMobileViewport]);
+  }, [isLoading, isThinking, chatMode]);
 
   const { handleScroll, scrollToBottom } = useChatScroll({
     messages,
@@ -2602,6 +2452,12 @@ const ChatPage = () => {
 
 
   const hasConversation = messages.length > 0;
+  const hasActiveTaskGlow =
+    !hasConversation ||
+    Boolean(getActiveComputerRun()) ||
+    Boolean(operatorRunId) ||
+    Boolean(activeResearchJobId) ||
+    (isLoading && ["images", "video", "code", "operator"].includes(chatMode));
   const showDesktopEmptyVideo = messages.length === 0 && !loadingMessages;
   // The desktop landing background is a 7 MB mp4. Mounting it during the first
   // render makes the browser open that download while it is still painting the
@@ -2915,11 +2771,9 @@ const ChatPage = () => {
           />
         </aside>
 
-        {/* Mobile Claude-style underlay sidebar — sits beneath the chat surface. */}
+        {/* Mobile sidebar is an independent overlay; the chat tree never moves. */}
         <div className="md:hidden">
           <AppSidebar
-            underlay
-            mobileSide={isRtlUi ? "right" : "left"}
             open={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
             onNewChat={handleNewChat}
@@ -2954,62 +2808,14 @@ const ChatPage = () => {
         <motion.div
           data-chat-main="true"
           data-chat-empty={messages.length === 0 && !loadingMessages ? "true" : "false"}
+          data-chat-glow={hasActiveTaskGlow ? "true" : "false"}
           data-sidebar-open={sidebarOpen ? "true" : "false"}
-          style={{
-            x: sidebarX,
-            scale: sidebarScale,
-            borderRadius: sidebarRadius,
-            boxShadow: sidebarShadow,
-            transformOrigin: isRtlUi ? "right center" : "left center",
-            touchAction: "pan-y",
-          }}
-          onPointerDown={(event) => {
-            if (event.pointerType === "mouse") return;
-            if (blocksSidebarSwipe(event.target, event.clientX, isRtlUi)) return;
-            beginSidebarEdgeDrag(event.pointerId, event.clientX, event.clientY);
-          }}
-          onPointerMove={(event) => {
-            if (event.pointerType === "mouse") return;
-            updateSidebarEdgeDrag(event.pointerId, event.clientX, event.clientY);
-          }}
-          onPointerUp={(event) => endSidebarEdgeDrag(event.pointerId)}
-          onPointerCancel={(event) => endSidebarEdgeDrag(event.pointerId)}
-          drag={isMobileViewport && sidebarOpen ? "x" : false}
-          dragDirectionLock
-          dragConstraints={
-            isRtlUi ? { left: -sidebarRevealX, right: 0 } : { left: 0, right: sidebarRevealX }
-          }
-          dragElastic={isRtlUi ? { left: 0.03, right: 0.14 } : { left: 0.14, right: 0.03 }}
-          dragMomentum={false}
-          onDragEnd={(_, info) => {
-            if (!sidebarOpen) return;
-            const shouldClose = isRtlUi
-              ? info.offset.x > Math.max(72, sidebarRevealX * (1 - SIDEBAR_CLOSE_SNAP)) ||
-                info.velocity.x > SIDEBAR_FLING_VELOCITY
-              : info.offset.x < -Math.max(72, sidebarRevealX * (1 - SIDEBAR_CLOSE_SNAP)) ||
-                info.velocity.x < -SIDEBAR_FLING_VELOCITY;
-            setSidebarOpen(!shouldClose);
-            animateSidebarTo(!shouldClose);
-          }}
           role="main"
           aria-label="Chat"
           className="theme-fixed chat-surface-dark flex-1 flex flex-col min-w-0 relative overflow-hidden bg-background text-foreground max-md:z-[2]"
         >
 
 
-
-
-          {/* Tap-to-close overlay while the underlay sidebar is revealed. */}
-          <motion.div
-            className={`md:hidden absolute inset-0 z-[60] ${
-              sidebarOpen
-                ? "pointer-events-auto"
-                : "pointer-events-none"
-            }`}
-            style={{ background: "rgba(0,0,0,0.42)", opacity: sidebarProgress }}
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden={!sidebarOpen}
-          />
 
 
           <ChatArtifactsCanvas conversationId={conversationId} />
