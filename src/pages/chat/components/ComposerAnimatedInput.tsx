@@ -139,7 +139,7 @@ export function ComposerAnimatedInput(props: ComposerAnimatedInputProps) {
         if (!plusMenuOpen) setPlusView("main");
         setPlusMenuOpen(!plusMenuOpen);
       }}
-      disabled={isLoading || !!remoteAiBusy || !!activeResearchJobId}
+      disabled={!!remoteAiBusy}
       isLoading={isLoading || !!activeResearchJobId || !!activeComputerRunId}
       pendingQuestions={pendingQuestions}
       onQuestionAnswer={handleQuestionAnswer}
