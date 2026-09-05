@@ -22,6 +22,11 @@ export interface ThinkingTraceProps {
   running?: boolean;
   /** Real tool family currently executing — drives the row icon. */
   tool?: string | null;
+  /**
+   * "tools" renders the Manus-style used-tools timeline: a summary header plus
+   * one icon-marked line per real step, kept in the chat after the run ends.
+   */
+  variant?: "default" | "tools";
   /** Start expanded (rarely needed — collapsed is the default look). */
   defaultOpen?: boolean;
   className?: string;
@@ -45,6 +50,7 @@ const ThinkingTrace = ({
   active,
   running,
   tool,
+  variant = "default",
   defaultOpen,
   className = "",
 }: ThinkingTraceProps) => {
@@ -146,6 +152,69 @@ const ThinkingTrace = ({
   if (!hasBody && !active) return null;
 
   const pulse = running ? "motion-safe:animate-pulse" : "";
+
+  // ── Used-tools timeline (computer / coding / long tasks) ──────────────────
+  if (variant === "tools") {
+    const summary = isAr
+      ? `الأدوات المستخدمة · ${stepLines.length} خطوة`
+      : `Tools used · ${stepLines.length} steps`;
+    return (
+      <div className={`mb-3 ${className}`} dir={rtl ? "rtl" : undefined}>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="flex w-full items-center gap-2 text-start text-[12.5px] text-muted-foreground shadow-none"
+        >
+          {active ? (
+            <MegsyStar className={`h-3.5 w-3.5 shrink-0 text-[var(--megsy-blue)] ${pulse}`} />
+          ) : (
+            <BrandLogo className="h-3.5 w-3.5 shrink-0" />
+          )}
+          <span className={`min-w-0 flex-1 truncate ${active ? "ai-shimmer motion-reduce:animate-none" : ""}`} aria-live="polite">
+            {active ? headline : summary}
+          </span>
+          <ChevronDown className={`h-3.5 w-3.5 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
+        </button>
+
+        {(open || active) && (
+          <ol className="mt-2 flex flex-col gap-2">
+            {stepLines.map((line, i) => (
+              <li
+                key={`t-${i}-${line.slice(0, 24)}`}
+                className="flex items-start gap-2.5 text-[12.5px] leading-relaxed text-muted-foreground"
+              >
+                <span
+                  aria-hidden
+                  className="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[5px] border border-border/60 bg-muted/40 text-muted-foreground"
+                >
+                  <ToolIcon name={tool || "wrench"} size={11} />
+                </span>
+                <span className="min-w-0 break-words">{line}</span>
+              </li>
+            ))}
+            {stepLines.length === 0 && (
+              <li className="text-[12.5px] text-muted-foreground/80">
+                {isAr ? "لا توجد خطوات بعد…" : "No steps yet…"}
+              </li>
+            )}
+          </ol>
+        )}
+
+        {open && reasoningLines.length > 0 && (
+          <div className="mt-2 flex flex-col gap-1.5 border-t border-border/40 pt-2">
+            {reasoningLines.map((line, i) => (
+              <p key={`tr-${i}`} className="text-[12.5px] leading-relaxed text-muted-foreground/90 break-words">
+                {line}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+
 
   return (
     <div className={`mb-3 rounded-[8px] bg-muted/35 px-3 py-2 ${className}`} dir={rtl ? "rtl" : undefined}>
