@@ -53,7 +53,7 @@ const SLIDE = { duration: 0.22, ease: [0.32, 0.72, 0, 1] as const };
  */
 export default function IntegrationsSheet({ open, onOpenChange }: Props) {
   const language = useUserLang();
-  const isArabic = language === "ar";
+  const isArabic = language === "ar-eg";
   const [connected, setConnected] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<Tab>("tools");

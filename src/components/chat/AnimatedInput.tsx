@@ -99,7 +99,7 @@ const AnimatedInput = ({
   const currentLang = useUserLang();
   const deferredValue = useDeferredValue(value);
   const navigate = useNavigate();
-  const shortPlaceholder = currentLang === "ar" ? "اسأل ميغسي" : "Ask Megsy";
+  const shortPlaceholder = currentLang === "ar-eg" ? "اسأل ميغسي" : "Ask Megsy";
 
   /**
    * Intercept bare slash commands (e.g. "/clear", "/docs", "/new").
