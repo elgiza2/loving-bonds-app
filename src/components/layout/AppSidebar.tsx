@@ -1306,25 +1306,14 @@ const AppSidebar = ({
     <AnimatePresence>
       {open && (
         <>
-          {!isTransparentSurface && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.12, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed inset-0 z-popover bg-background/55 cursor-pointer"
-              onClick={onClose}
-              onTouchStart={onClose}
-            />
-          )}
-          {isTransparentSurface && (
-            <div
-              className="fixed inset-0 z-popover"
-              onClick={onClose}
-              onTouchStart={onClose}
-              style={{ background: "transparent" }}
-            />
-          )}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12, ease: [0.32, 0.72, 0, 1] }}
+            className="fixed inset-0 z-popover bg-background/55 cursor-pointer"
+            onClick={onClose}
+          />
           <motion.aside
             initial={{ x: isMobileRightSide ? "100%" : "-100%" }}
             animate={{ x: 0 }}
@@ -1348,13 +1337,11 @@ const AppSidebar = ({
               backgroundColor: PAGE_BG,
               willChange: "transform",
               touchAction: "pan-y",
-              width: "288px",
+              width: "100vw",
               left: isMobileRightSide ? "auto" : 0,
               right: isMobileRightSide ? 0 : "auto",
             }}
-            className={`fixed top-0 bottom-0 z-[91] flex flex-col overflow-hidden ${
-              isMobileRightSide ? "border-l" : "border-r"
-            } border-foreground/10 shadow-[0_24px_64px_-12px_rgba(0,0,0,0.45)]`}
+            className="fixed top-0 bottom-0 z-[91] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {mobileContent}

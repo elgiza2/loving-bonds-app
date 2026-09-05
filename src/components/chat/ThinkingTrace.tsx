@@ -148,12 +148,12 @@ const ThinkingTrace = ({
   const pulse = running ? "motion-safe:animate-pulse" : "";
 
   return (
-    <div className={`mb-3 ${className}`} dir={rtl ? "rtl" : undefined}>
+    <div className={`mb-3 rounded-[8px] bg-muted/35 px-3 py-2 ${className}`} dir={rtl ? "rtl" : undefined}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 py-0.5 text-start shadow-none"
+        className="flex w-full items-center gap-2 text-start shadow-none"
       >
         {active ? (
           tool ? (
@@ -186,7 +186,7 @@ const ThinkingTrace = ({
       </button>
 
       {open && (
-        <div className="mt-2 max-h-80 overflow-y-auto border-s border-border ps-4 py-1">
+        <div className="mt-3 max-h-80 overflow-y-auto border-s border-primary/30 ps-4 py-1">
           <div className="flex flex-col gap-3">
             {stepLines.length > 0 && (
               <ol className="flex flex-col gap-2">
@@ -195,7 +195,7 @@ const ThinkingTrace = ({
                     key={`s-${i}-${line.slice(0, 24)}`}
                     className="flex items-start gap-2.5 text-[12.5px] leading-relaxed text-muted-foreground"
                   >
-                    <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
+                    <span aria-hidden className="-ms-[19px] mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full border border-primary/30 bg-background text-[10px] font-semibold text-primary">{i + 1}</span>
                     <span className="min-w-0 break-words">{line}</span>
                   </li>
                 ))}
