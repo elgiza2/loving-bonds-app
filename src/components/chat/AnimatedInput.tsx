@@ -271,7 +271,7 @@ const AnimatedInput = ({
 
   const skillDraft = value.startsWith(SKILL_MARKER);
 
-  /** Compact pill: idle composer shrinks in from the sides and rounds fully. */
+  /** Compact pill: the idle composer remains a stable native-feeling control. */
   const compact = !focused && !hasText && !isEditing;
 
   return (
@@ -292,9 +292,9 @@ const AnimatedInput = ({
       <div className="md:rounded-[28px]">
         <motion.div
           data-compact={compact ? "true" : "false"}
-          className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto relative z-10 border-0 transition-[border-radius,margin,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto relative z-10 transition-[border-radius,margin,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             compact
-              ? "mx-5 rounded-full px-2.5 py-1.5 md:mx-6"
+              ? "mx-0 rounded-3xl px-3 py-2"
               : "mx-0 rounded-[26px] px-3.5 pt-3 pb-2.5 md:px-4 md:pt-3 md:pb-2.5"
           } ${chatContext ? "chat-composer-liquid" : ""}`}
         >
