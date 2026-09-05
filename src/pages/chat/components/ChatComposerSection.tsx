@@ -9,6 +9,7 @@ import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
 import { prewarmSendPath } from "../lib/prewarmSendPath";
 import ComposerServicePanel from "./ComposerServicePanel";
 import StarterCards, { StarterChips } from "./StarterCards";
+import ComposerComputerDock from "@/components/chat/ComposerComputerDock";
 
 import type { AttachedFile } from "../hooks/useAttachments";
 
@@ -167,7 +168,9 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
             <div className="md:contents">
               <div ref={composerRef as any} className="relative z-[8] pointer-events-auto md:p-[1px] md:rounded-[28px]">
                 {plusMenuOpen ? renderPlusMenu() : null}
+                <ComposerComputerDock className="mb-2" />
                 <div className="md:rounded-[27px] md:overflow-hidden">
+
 
                 <ComposerAnimatedInput
                 {...(composerAnimatedInputProps as any)}

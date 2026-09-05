@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { useLongRun } from "@/hooks/useLongRun";
 import { clearActiveComputerRun, setActiveComputerRun } from "@/lib/computer/activeRun";
+import { clearComputerLiveView, setComputerLiveView } from "@/lib/computer/liveView";
 import { cleanTrace, isInternalTraceLine } from "@/lib/computer/traceCleanup";
 import ThinkingTrace from "@/components/chat/ThinkingTrace";
 import ChatMessage from "@/components/chat/ChatMessage";
@@ -41,6 +42,7 @@ export function ComputerPreview({
     else if (finished) clearActiveComputerRun(runId);
   }, [active, finished, runId]);
   useEffect(() => () => clearActiveComputerRun(runId), [runId]);
+  useEffect(() => () => clearComputerLiveView(runId), [runId]);
 
   // The run keeps going server-side, so tell the user when it lands or blocks.
   const notifiedRef = useRef<string | null>(null);
@@ -157,12 +159,27 @@ export function ComputerPreview({
     }
   };
 
+  useEffect(() => {
+    if (!active && !url && !lastShot) {
+      clearComputerLiveView(runId);
+      return;
+    }
+    setComputerLiveView({
+      id: runId,
+      url,
+      poster: lastShot,
+      status: thinking,
+      active: !!active,
+    });
+  }, [active, url, lastShot, runId, thinking]);
+
   return (
     <div className="flex flex-col gap-2.5">
       {/* thinking badge — the only status surface in the chat */}
       {!question && (
         <ThinkingTrace
           active={active}
+          variant="tools"
           status={thinking}
           steps={traceSteps}
           text={traceText}
@@ -227,37 +244,7 @@ export function ComputerPreview({
         </div>
       )}
 
-      {/* computer card — a bare rounded screen: no header, no icons, no buttons.
-          It appears as soon as the computer is in use, even before the live
-          view or the first screenshot exists (soft shimmer placeholder). */}
-      {(hasScreen || active) && (
-        <div className="overflow-hidden rounded-2xl border border-border/40 bg-black/80">
-          <div className="relative aspect-[16/10] w-full">
-            {url ? (
-              <iframe
-                key={url}
-                src={url}
-                title="Megsy Computer"
-                className="absolute inset-0 h-full w-full border-0"
-                allow="clipboard-read; clipboard-write"
-                sandbox="allow-scripts allow-same-origin allow-forms"
-              />
-            ) : lastShot ? (
-              <img
-                src={lastShot}
-                alt=""
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover object-top"
-              />
-            ) : (
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent" />
-            )}
-            {url && <div className="absolute inset-0" aria-hidden />}
-          </div>
-        </div>
-      )}
-
-
+      {/* the screen itself lives inside the composer dock while the run works */}
       {/* final answer — rendered exactly like a normal assistant message
           (markdown, headings, lists, code, copy/like actions). */}
       {finished && finalText && (
