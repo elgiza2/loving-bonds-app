@@ -20,6 +20,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { m as motion, AnimatePresence } from "framer-motion";
 import MegsyStarBrand from "@/components/branding/MegsyStar";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -905,8 +906,7 @@ const ChatMessage = ({
       const pad = 10;
       let left = r.right - W;
       left = Math.min(Math.max(pad, left), window.innerWidth - W - pad);
-      let top = r.top - H - 8;
-      if (top < pad) top = Math.min(r.bottom + 8, window.innerHeight - H - pad);
+      const top = Math.min(r.bottom + 8, window.innerHeight - H - pad);
       setMenuPos({ top, left });
     };
     place();
@@ -1297,7 +1297,7 @@ const ChatMessage = ({
                     WebkitUserSelect: "none",
                     userSelect: "none",
                   }}
-                  className={`px-4 py-2.5 rounded-3xl rounded-br-lg text-[0.9375rem] leading-relaxed break-words user-bubble lang-${l} transition-transform ${menuOpen ? "scale-[0.985]" : ""}`}
+                  className={`px-4 py-2.5 rounded-[18px] text-[0.9375rem] leading-relaxed break-words user-bubble lang-${l} transition-transform ${menuOpen ? "scale-[0.985]" : ""}`}
                 >
                   <UserMarkdown content={content} onLinkClick={handleLinkClick} />
                 </div>
@@ -1954,7 +1954,8 @@ const ChatMessage = ({
 
             {/* Action buttons: like + copy + dislike — flat, no shadow, small playful feedback */}
             {!isStreaming && !hasRunningTool && content && !showSlidesInfoBox && !hideActions && (
-              <AIMessageActions className="mt-1.5 gap-0">
+              <div className="mt-1.5 flex flex-col items-start gap-1">
+              <AIMessageActions className="gap-0">
                 <AIMessageAction
                   onClick={() => {
                     const next = liked === true ? null : true;
@@ -1993,18 +1994,6 @@ const ChatMessage = ({
                       </motion.span>
                     )}
                   </AnimatePresence>
-                </AIMessageAction>
-
-                <AIMessageAction
-                  onClick={handleCopy}
-                  tooltip={copied ? "Copied" : "Copy"}
-                  className="h-7 w-7 rounded-md border-0 bg-transparent text-muted-foreground/70 shadow-none hover:bg-transparent hover:text-foreground"
-                >
-                  {copied ? (
-                    <Check className="w-[15px] h-[15px] text-emerald-500" strokeWidth={1.75} />
-                  ) : (
-                    <Copy className="w-[15px] h-[15px]" strokeWidth={1.75} />
-                  )}
                 </AIMessageAction>
 
                 <AnimatePresence initial={false}>
@@ -2058,7 +2047,20 @@ const ChatMessage = ({
                     </motion.div>
                   )}
                 </AnimatePresence>
+                <AIMessageAction
+                  onClick={handleCopy}
+                  tooltip={copied ? "Copied" : "Copy"}
+                  className="h-7 w-7 rounded-md border-0 bg-transparent text-muted-foreground/70 shadow-none hover:bg-transparent hover:text-foreground"
+                >
+                  {copied ? (
+                    <Check className="w-[15px] h-[15px] text-emerald-500" strokeWidth={1.75} />
+                  ) : (
+                    <Copy className="w-[15px] h-[15px]" strokeWidth={1.75} />
+                  )}
+                </AIMessageAction>
               </AIMessageActions>
+              <BrandLogo className="ms-1 h-3.5 w-3.5 opacity-70" aria-label="Megsy" />
+              </div>
             )}
 
 

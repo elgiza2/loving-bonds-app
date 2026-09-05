@@ -141,9 +141,9 @@ export function DesktopChatHeader(props: DesktopChatHeaderProps) {
             {credits.toLocaleString()}
           </button>
         ) : null}
-        {chatUserId ? (
+        {chatUserId && !hasConversation ? (
           <UpgradePlanButton variant="compact" />
-        ) : (
+        ) : !chatUserId ? (
           <button
             type="button"
             onPointerDown={prefetchAuth}
@@ -158,7 +158,7 @@ export function DesktopChatHeader(props: DesktopChatHeaderProps) {
           >
             {uiT("Sign in", lang)}
           </button>
-        )}
+        ) : null}
 
         {hasConversation && conversationId && !hideOptions && (
           <ChatOptionsDropdown variant="mobile" {...props} />

@@ -170,21 +170,6 @@ const PlusMain = (p: PlusContentProps) => {
       Icon: Blocks,
       onClick: () => p.setPlusView("skills"),
     },
-    {
-      id: "integrations",
-      label: "Integrations",
-      desc: "Connect apps and databases",
-      Icon: Puzzle,
-      onClick: () => p.setPlusView("tools"),
-    },
-    {
-      id: "search",
-      label: "Web search",
-      Icon: Radar,
-      value: searchLabel,
-      active: searchMode !== "off",
-      onClick: () => setSearchOpen((v) => !v),
-    },
   ];
 
 
@@ -280,8 +265,9 @@ const PlusMain = (p: PlusContentProps) => {
           .kimi-scroll::-webkit-scrollbar { display: none; }
         `}</style>
 
-        {/* Quick attach tiles — horizontally scrollable squares */}
-        <div className="grid grid-cols-2 gap-2.5 px-3 pb-3 pt-1">
+        <div className="px-4 pb-2 pt-1 text-start text-[17px] font-semibold text-foreground">Add</div>
+        {/* Images and files are the only quick attachments. */}
+        <div className="grid grid-cols-2 gap-2 px-3 pb-2 pt-1">
           {quickTiles.map((t) => (
             <button
               key={t.id}
@@ -289,12 +275,10 @@ const PlusMain = (p: PlusContentProps) => {
               type="button"
               onClick={t.onClick}
               aria-label={t.label}
-              className="kimi-tile flex h-[104px] w-full flex-col items-center justify-center gap-2.5 rounded-[22px] border-0 text-center"
-              style={{ background: "hsl(var(--foreground) / 0.055)" }}
+              className="kimi-tile flex h-[84px] w-full flex-col items-center justify-center gap-2 rounded-[18px] border border-border/60 bg-muted/45 text-center"
             >
               <span
-                className="grid h-11 w-11 place-items-center rounded-full"
-                style={{ background: "hsl(var(--foreground) / 0.06)" }}
+                className="grid h-9 w-9 place-items-center rounded-full bg-background"
               >
                 <t.Icon className="h-[20px] w-[20px] text-foreground/85" strokeWidth={1.8} />
               </span>
@@ -335,36 +319,26 @@ const PlusMain = (p: PlusContentProps) => {
         <DesktopGroup>
           {[
             {
-              icon: FileUp,
-              label: "Add files or photos",
-              shortcut: "Ctrl+U",
-              onClick: () => {
-                p.fileInputRef.current?.click();
-                p.setPlusMenuOpen(false);
-              },
-            },
-            {
-              icon: Camera,
-              label: "Take a photo",
-              onClick: () => {
-                p.cameraInputRef.current?.click();
-                p.setPlusMenuOpen(false);
-              },
-            },
-            {
               icon: Image,
-              label: "Upload an image",
+              label: "Images",
               onClick: () => {
                 p.imageInputRef.current?.click();
                 p.setPlusMenuOpen(false);
               },
             },
             {
-              icon: Link2,
-              label: "Add link",
+              icon: FileUp,
+              label: "Files",
               onClick: () => {
-                p.onAddLink?.();
+                p.fileInputRef.current?.click();
                 p.setPlusMenuOpen(false);
+              },
+            },
+            {
+              icon: Blocks,
+              label: "Skills",
+              onClick: () => {
+                p.setPlusView("skills");
               },
             },
           ].map(({ icon: Icon, label, shortcut, onClick }) => (
@@ -382,47 +356,8 @@ const PlusMain = (p: PlusContentProps) => {
           ))}
         </DesktopGroup>
 
-        {p.chatMode === "learning" ? (
-          <DesktopGroup title="Focus">
-            <DesktopRow Icon={Music2} label="Play music" color="currentColor" onClick={() => p.setPlusView("music")} />
-            <DesktopRow Icon={Timer} label="Focus timer" color="currentColor" onClick={() => p.setPlusView("timer")} />
-          </DesktopGroup>
-        ) : (
+        {false && (
           <>
-            <DesktopGroup>
-              <button
-                onClick={() => setSearchOpen((v) => !v)}
-                aria-expanded={searchOpen}
-                className="w-full flex items-center gap-3 px-2.5 h-9 rounded-[10px] text-start hover:bg-foreground/[0.06] transition-colors"
-              >
-                <Radar
-                  className="w-[18px] h-[18px] shrink-0"
-                  strokeWidth={1.8}
-                  style={{ color: searchMode === "off" ? "hsl(var(--foreground) / 0.7)" : "hsl(var(--primary))" }}
-                />
-                <span className="flex-1 text-[13.5px] font-medium text-foreground">Web search</span>
-                <span className="text-[12px] font-medium text-muted-foreground">{searchLabel}</span>
-                <ChevronLeft
-                  className={`w-[15px] h-[15px] text-foreground/40 transition-transform duration-200 ${
-                    searchOpen ? "-rotate-90" : "rotate-180"
-                  }`}
-                />
-              </button>
-              <AnimatePresence initial={false}>{searchOpen && <SearchModeList />}</AnimatePresence>
-              <DesktopRow Icon={Blocks} label="Skills" color="currentColor" onClick={() => p.setPlusView("skills")} chevron />
-
-              <DesktopRow Icon={Wrench} label="Integrations" color="currentColor" onClick={() => p.setPlusView("tools")} chevron />
-              <DesktopRow
-                Icon={Plug}
-                label="MCP Servers"
-                color="currentColor"
-                onClick={() => {
-                  p.setPlusMenuOpen(false);
-                  p.navigate("/settings/mcp");
-                }}
-              />
-            </DesktopGroup>
-
             <DesktopGroup>
               <DesktopRow
                 Icon={ImagePlus}

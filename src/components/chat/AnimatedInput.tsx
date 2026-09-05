@@ -321,9 +321,10 @@ const AnimatedInput = ({
       {/* Desktop: liquid-glass surface (no solid card wrapper) */}
       <div className="md:rounded-[28px]">
         <motion.div
+          data-compact={compact ? "true" : "false"}
           className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto relative z-10 border-0 transition-[border-radius,margin,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             compact
-              ? "mx-4 rounded-[28px] px-3.5 pt-2 pb-2 md:mx-6"
+              ? "mx-5 rounded-full px-2.5 py-1.5 md:mx-6"
               : "mx-0 rounded-[26px] px-3.5 pt-3 pb-2.5 md:px-4 md:pt-3 md:pb-2.5"
           } ${chatContext ? "chat-composer-liquid" : ""}`}
         >
@@ -476,6 +477,7 @@ const AnimatedInput = ({
           {/* Bottom controls row — plus + integrations on the start side, one
               morphing action button (mic ↔ send) on the end side. */}
           <div
+            data-composer-controls
             dir="ltr"
             className={`relative flex items-center gap-1 ${compact ? "pt-0" : "pt-1 md:pt-0"}`}
           >
