@@ -84,7 +84,7 @@ export default function IntegrationsSheet({ open, onOpenChange }: Props) {
     }
     void refresh();
     const vh = window.innerHeight;
-    const expandedH = Math.min(vh * 0.92, vh - 24);
+    const expandedH = Math.min(vh * 0.76, 620);
     setSize({ height: expandedH, collapsedY: 0 });
 
   }, [open]);

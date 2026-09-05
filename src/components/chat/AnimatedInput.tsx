@@ -445,7 +445,7 @@ const AnimatedInput = ({
               morphing action button (mic ↔ send) on the end side. */}
           <div
             data-composer-controls
-            dir="ltr"
+            dir={isArabicUi ? "rtl" : "ltr"}
             className={`relative flex items-center gap-1 ${compact ? "pt-0" : "pt-1 md:pt-0"}`}
           >
             <Button
@@ -462,7 +462,9 @@ const AnimatedInput = ({
             </Button>
 
 
-            <ComposerIntegrationsButton onClick={() => setIntegrationsOpen(true)} />
+            {(focused || hasText) && (
+              <ComposerIntegrationsButton onClick={() => setIntegrationsOpen(true)} />
+            )}
             <IntegrationsSheet open={integrationsOpen} onOpenChange={setIntegrationsOpen} />
 
             {serviceTools}
@@ -481,7 +483,7 @@ const AnimatedInput = ({
                 >
                   <Square className="w-3 h-3" fill="currentColor" />
                 </Button>
-              ) : hasText ? (
+              ) : (
                 <motion.div
                   key="send"
                   initial={{ opacity: 0, scale: 0.7 }}
@@ -491,7 +493,7 @@ const AnimatedInput = ({
                 >
                   <Button
                     onClick={handleSendWithSlash}
-                    disabled={disabled}
+                    disabled={disabled || !hasText}
                     data-testid="mobile-composer-send"
                     variant="neutral"
                     size="icon-sm"
@@ -501,7 +503,7 @@ const AnimatedInput = ({
                     <ArrowUp className="w-[18px] h-[18px] md:w-4 md:h-4" strokeWidth={2.2} />
                   </Button>
                 </motion.div>
-              ) : null}
+              )}
             </AnimatePresence>
           </div>
 

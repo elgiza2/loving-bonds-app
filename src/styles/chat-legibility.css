@@ -124,7 +124,7 @@
 
   .chat-composer-frame[data-compact="true"] {
     min-height: 48px;
-    padding-inline: 5.6rem !important;
+    padding-inline: 3.35rem !important;
   }
 
   .chat-composer-frame[data-compact="true"] > div:has(textarea) {
@@ -144,6 +144,17 @@
     width: auto;
     transform: translateY(-50%);
     padding: 0;
+    pointer-events: none;
+  }
+
+  .chat-composer-frame[data-compact="true"] [data-composer-controls] button {
+    pointer-events: auto;
+  }
+
+  .chat-composer-frame textarea {
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
   }
 
   .chat-composer-frame[data-compact="true"] [data-composer-controls] > .flex-1 {
