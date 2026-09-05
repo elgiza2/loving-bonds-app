@@ -1158,7 +1158,7 @@ const AppSidebar = ({
       <div
         data-mobile-sidebar-fixed-footer="true"
         dir="ltr"
-        className="z-20 flex h-[68px] shrink-0 items-center bg-transparent px-5"
+        className="z-20 grid h-[72px] shrink-0 grid-cols-[44px_auto_1fr] items-center gap-3 bg-transparent px-5"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <button
@@ -1174,7 +1174,7 @@ const AppSidebar = ({
           <button
             type="button"
             onClick={() => navigateSmoothly("/pricing")}
-            className="ms-2 h-9 shrink-0 rounded-full bg-primary/20 px-4 text-[15px] font-medium text-primary transition-colors hover:bg-primary/25"
+            className="h-10 shrink-0 rounded-full bg-primary/20 px-4 text-[15px] font-medium text-primary transition-colors hover:bg-primary/25"
           >
             {language === "ar-eg" ? "ترقية" : "Upgrade"}
           </button>
@@ -1184,15 +1184,15 @@ const AppSidebar = ({
           type="button"
           onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
           dir="ltr"
-          className="ml-auto flex min-w-0 items-center gap-3 rounded-full text-foreground"
+          className="justify-self-end flex min-w-0 items-center gap-3 rounded-full text-foreground"
         >
-          <span className="max-w-[132px] truncate text-[16px] font-medium">
+          <span className="max-w-[148px] truncate text-[16px] font-medium">
             {activeUserId ? displayName || (language === "ar-eg" ? "المستخدم" : "User") : language === "ar-eg" ? "تسجيل الدخول" : "Sign in"}
           </span>
           {displayAvatar ? (
-            <img loading="lazy" decoding="async" src={displayAvatar} alt="" className="h-9 w-9 rounded-full object-cover" />
+            <img loading="lazy" decoding="async" src={displayAvatar} alt="" className="h-10 w-10 rounded-full object-cover" />
           ) : (
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-[15px] font-medium text-primary-foreground">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-[15px] font-medium text-primary-foreground">
               {activeUserId ? initial : <LogIn className="h-5 w-5" />}
             </span>
           )}
