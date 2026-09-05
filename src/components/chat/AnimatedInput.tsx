@@ -323,7 +323,7 @@ const AnimatedInput = ({
         <motion.div
           className={`chat-composer-frame chat-mobile-input-glow composer-card pointer-events-auto relative z-10 border-0 transition-[border-radius,margin,padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             compact
-              ? "mx-2 rounded-full px-3 pt-1.5 pb-1.5 md:mx-3"
+              ? "mx-4 rounded-[28px] px-3.5 pt-2 pb-2 md:mx-6"
               : "mx-0 rounded-[26px] px-3.5 pt-3 pb-2.5 md:px-4 md:pt-3 md:pb-2.5"
           } ${chatContext ? "chat-composer-liquid" : ""}`}
         >
