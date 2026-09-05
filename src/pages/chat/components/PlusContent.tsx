@@ -195,42 +195,39 @@ const PlusMain = (p: PlusContentProps) => {
       data-no-neo
       type="button"
       onClick={item.onClick}
-      className="plus-row w-full flex items-center gap-3 px-2 py-2 rounded-[12px] text-start border-0 bg-transparent"
+      className="plus-row w-full flex items-center gap-3.5 px-3 py-3.5 rounded-[14px] text-start border-0 bg-transparent"
     >
-      <span
-        className={`shrink-0 grid place-items-center h-8 w-8 rounded-[10px] transition-colors duration-200 ${
-          item.active ? "bg-primary/10" : "bg-muted"
-        }`}
-      >
-        <item.Icon
-          className={`h-4 w-4 ${item.active ? "text-primary" : "text-foreground/75"}`}
-          strokeWidth={1.8}
-        />
-      </span>
-      <span className="flex-1 min-w-0 flex flex-col gap-[3px]">
-        <span className="text-[14px] font-medium leading-none text-foreground">
+      <item.Icon
+        className={`shrink-0 h-[21px] w-[21px] ${item.active ? "text-primary" : "text-foreground/80"}`}
+        strokeWidth={1.6}
+      />
+      <span className="flex-1 min-w-0 flex flex-col gap-1">
+        <span className="text-[15px] font-medium leading-none text-foreground">
           {item.label}
         </span>
         {item.desc && (
-          <span className="text-[11.5px] leading-none truncate text-muted-foreground">
+          <span className="text-[12px] leading-snug text-muted-foreground line-clamp-2">
             {item.desc}
           </span>
         )}
       </span>
       {item.value && (
         <span
-          className={`shrink-0 text-[11.5px] font-medium rounded-full px-2 py-[3px] ${
-            item.active ? "text-primary bg-primary/10" : "text-muted-foreground bg-muted"
+          className={`shrink-0 text-[12px] font-medium ${
+            item.active ? "text-primary" : "text-muted-foreground"
           }`}
         >
           {item.value}
         </span>
       )}
       <ChevronLeft
-        className={`shrink-0 h-[15px] w-[15px] text-muted-foreground/70 transition-transform duration-200 ${
+        className={`shrink-0 h-[16px] w-[16px] text-muted-foreground/60 transition-transform duration-200 ${
           expanded ? "-rotate-90" : "rotate-180"
         }`}
       />
+    </button>
+  );
+
     </button>
   );
 
