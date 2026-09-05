@@ -1000,36 +1000,24 @@ const AppSidebar = ({
       data-section={sectionAccent.name}
     >
       <div
-        onScroll={(e) => setMobileScrolled((e.currentTarget as HTMLDivElement).scrollTop > 6)}
-        className="relative flex-1 overflow-y-auto px-3 pb-32 min-h-0 [scrollbar-width:thin]"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + var(--pwa-extra-top, 0px) + 0.5rem)" }}
+        className="z-20 flex shrink-0 items-center gap-2 border-b border-border/40 bg-background px-4 pb-3"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + var(--pwa-extra-top, 0px) + 0.75rem)" }}
       >
-        {/* Brand header scrolls with the list — it is not pinned. */}
-        <div className="mb-3 flex items-center gap-2 px-1 pt-2">
-          <BrandLogo
-            alt=""
-            width={22}
-            height={22}
-            className="h-[22px] w-[22px] shrink-0"
-            loading="eager"
-            decoding="async"
-          />
-          <BrandWord
-            className="text-[19px] tracking-tight truncate"
-            style={{ fontWeight: 900, letterSpacing: "-0.02em" }}
-          >
-            Megsy
-          </BrandWord>
-          <button
-            type="button"
-            onClick={onClose}
-            className="ms-auto grid h-10 w-10 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+        <BrandLogo alt="" width={22} height={22} className="h-[22px] w-[22px] shrink-0" loading="eager" decoding="async" />
+        <BrandWord className="truncate text-[19px] font-bold tracking-normal">Megsy</BrandWord>
+        <button
+          type="button"
+          onClick={onClose}
+          className="ms-auto grid h-10 w-10 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          aria-label={language === "ar-eg" ? "إغلاق القائمة" : "Close menu"}
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
 
+      <div
+        className="relative min-h-0 flex-1 overflow-y-auto px-3 py-3 [scrollbar-width:thin]"
+      >
         <div className="space-y-1 mb-3">
 
           {primaryNav.map(({ label, Icon, path, match }) => {
