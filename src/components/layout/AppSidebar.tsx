@@ -1,7 +1,7 @@
 import EmptyState from "@/components/common/EmptyState";
 import { memo, startTransition, useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useLocation, type NavigateOptions } from "react-router-dom";
-import { Plus, PanelLeft, LogIn, Cloud, Sparkles, Settings, ChevronDown, Mail as MailIcon } from "lucide-react";
+import { Plus, PanelLeft, LogIn, Cloud, Sparkles, Settings, ChevronDown, Mail as MailIcon, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getUserSafe } from "@/lib/authSafe";
 import { getOwnProfile } from "@/lib/ownProfile";
@@ -1021,6 +1021,14 @@ const AppSidebar = ({
           >
             Megsy
           </BrandWord>
+          <button
+            type="button"
+            onClick={onClose}
+            className="ms-auto grid h-10 w-10 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="space-y-1 mb-3">
