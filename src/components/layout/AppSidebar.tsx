@@ -1000,7 +1000,7 @@ const AppSidebar = ({
       data-section={sectionAccent.name}
     >
       <div
-        className="z-20 flex shrink-0 items-center gap-2 border-b border-border/40 bg-background px-4 pb-3"
+        className="z-20 flex shrink-0 items-center gap-2 bg-transparent px-4 pb-3"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + var(--pwa-extra-top, 0px) + 0.75rem)" }}
       >
         <BrandLogo alt="" width={22} height={22} className="h-[22px] w-[22px] shrink-0" loading="eager" decoding="async" />
@@ -1158,13 +1158,13 @@ const AppSidebar = ({
       <div
         data-mobile-sidebar-fixed-footer="true"
         dir="ltr"
-        className="z-20 flex shrink-0 items-center gap-2 border-t border-border/40 bg-background px-4 pt-3"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+        className="z-20 flex min-h-[68px] shrink-0 items-center gap-3 bg-transparent px-4 pt-2"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 10px)" }}
       >
         <button
           type="button"
           onClick={() => navigateSmoothly("/settings")}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-muted"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label={language === "ar-eg" ? "الإعدادات" : "Settings"}
         >
           <Settings className="h-5 w-5" />
@@ -1174,7 +1174,7 @@ const AppSidebar = ({
           <button
             type="button"
             onClick={() => navigateSmoothly("/pricing")}
-            className="h-11 shrink-0 rounded-full bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="h-11 shrink-0 rounded-full bg-primary/20 px-5 text-[14px] font-semibold text-primary transition-colors hover:bg-primary/25"
           >
             {language === "ar-eg" ? "ترقية" : "Upgrade"}
           </button>
@@ -1184,9 +1184,9 @@ const AppSidebar = ({
           type="button"
           onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
           dir={language === "ar-eg" ? "rtl" : "ltr"}
-          className="ms-auto flex min-w-0 items-center gap-2 rounded-full text-foreground"
+          className="ms-auto flex min-w-0 items-center gap-3 rounded-full text-foreground"
         >
-          <span className="max-w-[110px] truncate text-[14px] font-medium">
+          <span className="max-w-[120px] truncate text-[15px] font-medium">
             {activeUserId ? displayName || (language === "ar-eg" ? "المستخدم" : "User") : language === "ar-eg" ? "تسجيل الدخول" : "Sign in"}
           </span>
           {displayAvatar ? (

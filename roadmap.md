@@ -24,3 +24,4 @@
 - [x] Verify empty, active chat, menus, and long-task states on mobile
 - [x] Match the compact Plus list, shorten integrations, and repair mobile composer typing
 - [x] Pin the mobile sidebar header and rebuild its fixed account footer
+- [x] Blend the mobile sidebar header into the panel and match the clean reference footer
