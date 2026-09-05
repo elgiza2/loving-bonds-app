@@ -118,8 +118,10 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
           : "md:bg-transparent md:backdrop-blur-0 md:border-0"
       }`}
     >
-      <div className={`${isDesktopLanding ? "md:max-w-4xl" : "max-w-3xl"} max-w-3xl mx-auto space-y-2 pointer-events-auto w-full`}>
-        <RemoteAiBusyBanner remoteAiBusy={remoteAiBusy} />
+      <div className={`${isDesktopLanding ? "md:max-w-4xl" : "max-w-3xl"} max-w-3xl mx-auto space-y-2 pointer-events-none w-full`}>
+        <div className="pointer-events-auto">
+          <RemoteAiBusyBanner remoteAiBusy={remoteAiBusy} />
+        </div>
 
         <div className="relative mx-auto w-full max-w-3xl">
 
@@ -163,7 +165,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
 
             <div className="md:contents">
-              <div ref={composerRef as any} className="relative z-[8] md:p-[1px] md:rounded-[28px]">
+              <div ref={composerRef as any} className="relative z-[8] pointer-events-auto md:p-[1px] md:rounded-[28px]">
                 {plusMenuOpen ? renderPlusMenu() : null}
                 <div className="md:rounded-[27px] md:overflow-hidden">
 
@@ -212,7 +214,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
               {/* Desktop-only starter chips below the composer (icons, no images). */}
               {starterChipsVisible ? (
                 <StarterChips
-                  className="mt-3"
+                  className="mt-3 pointer-events-auto"
                   onPick={(_prompt, mode) => {
                     if (mode) {
                       d.handleModeChange?.(mode);
