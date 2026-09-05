@@ -1343,6 +1343,21 @@ const ChatPage = () => {
   const submitLockAtRef = useRef(0);
   const sendWithTextRef = useRef<((overrideText?: string) => Promise<void>) | undefined>(undefined);
 
+  // Watchdog: while the composer shows "stop", keep checking that something is
+  // really running. If no stream and no computer run are active, release the
+  // composer instead of leaving the send button frozen.
+  useEffect(() => {
+    if (!isLoading) return;
+    const id = window.setInterval(() => {
+      if (!abortControllerRef.current && !getActiveComputerRun() && !operatorRunId && !activeResearchJobId) {
+        isSubmittingRef.current = false;
+        setIsLoading(false);
+        setIsThinking(false);
+      }
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [isLoading, operatorRunId, activeResearchJobId]);
+
   const ownInsertedIdsRef = useRef<Set<string>>(new Set());
 
   // Last message that expressed a "do this on a real computer" intent, so a
@@ -1385,7 +1400,20 @@ const ChatPage = () => {
       (text.trim().startsWith("[LEARN_ANSWER]") || text.trim().startsWith("[LEARN_CHOICE]"));
     const hasFrames = chatMode === "video" && videoStartEndMode && !!startFrameUrl && !!endFrameUrl;
     if (!text.trim() && attachedFiles.length === 0 && !hasFrames) return;
-    if (isLoading) return;
+    if (isLoading) {
+      // A tool run (search / images / video / computer) can take a minute or
+      // more. Sending during it used to be silently swallowed, which felt like
+      // a frozen send button. Now a new send interrupts the running task.
+      try {
+        handleCancel();
+      } catch (err) {
+        console.error("[send] cancel before resend failed", err);
+      }
+      isSubmittingRef.current = false;
+      setIsLoading(false);
+      setIsThinking(false);
+      await new Promise((r) => setTimeout(r, 60));
+    }
     if (isSubmittingRef.current) {
       // Release locks older than 15s instead of blocking the composer for a
       // full minute after a branch that forgot to unlock.
