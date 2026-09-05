@@ -1158,23 +1158,23 @@ const AppSidebar = ({
       <div
         data-mobile-sidebar-fixed-footer="true"
         dir="ltr"
-        className="z-20 flex min-h-[68px] shrink-0 items-center gap-3 bg-transparent px-4 pt-2"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 10px)" }}
+        className="z-20 flex h-[76px] shrink-0 items-center bg-transparent px-5"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <button
           type="button"
           onClick={() => navigateSmoothly("/settings")}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label={language === "ar-eg" ? "الإعدادات" : "Settings"}
         >
-          <Settings className="h-5 w-5" />
+          <Settings className="h-6 w-6" strokeWidth={1.8} />
         </button>
 
         {activeUserId && (
           <button
             type="button"
             onClick={() => navigateSmoothly("/pricing")}
-            className="h-11 shrink-0 rounded-full bg-primary/20 px-5 text-[14px] font-semibold text-primary transition-colors hover:bg-primary/25"
+            className="ms-2 h-11 shrink-0 rounded-full bg-primary/20 px-5 text-[15px] font-medium text-primary transition-colors hover:bg-primary/25"
           >
             {language === "ar-eg" ? "ترقية" : "Upgrade"}
           </button>
@@ -1184,15 +1184,15 @@ const AppSidebar = ({
           type="button"
           onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
           dir="ltr"
-          className="ml-auto flex min-w-0 items-center gap-3 rounded-full text-foreground"
+          className="ml-auto flex min-w-0 items-center gap-4 rounded-full text-foreground"
         >
-          <span className="max-w-[120px] truncate text-[15px] font-medium">
+          <span className="max-w-[132px] truncate text-[16px] font-medium">
             {activeUserId ? displayName || (language === "ar-eg" ? "المستخدم" : "User") : language === "ar-eg" ? "تسجيل الدخول" : "Sign in"}
           </span>
           {displayAvatar ? (
-            <img loading="lazy" decoding="async" src={displayAvatar} alt="" className="h-11 w-11 rounded-full object-cover" />
+            <img loading="lazy" decoding="async" src={displayAvatar} alt="" className="h-12 w-12 rounded-full object-cover" />
           ) : (
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-[14px] font-semibold text-primary-foreground">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-primary text-[17px] font-medium text-primary-foreground">
               {activeUserId ? initial : <LogIn className="h-5 w-5" />}
             </span>
           )}
