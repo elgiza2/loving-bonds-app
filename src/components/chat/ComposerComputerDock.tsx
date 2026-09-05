@@ -6,7 +6,7 @@
  * of the real screen. Tapping it expands the same strip in place (no dialog, no
  * navigation) into the full screen, and tapping again collapses it back.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import MegsyStar from "@/components/branding/MegsyStar";
 import { useComputerLiveView } from "@/lib/computer/liveView";
@@ -18,6 +18,10 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
   const [open, setOpen] = useState(false);
   const isAr = lang.startsWith("ar");
 
+  useEffect(() => {
+    setOpen(false);
+  }, [view?.id]);
+
   if (!view || (!view.active && !view.url && !view.poster)) return null;
 
   const title = isAr ? "كومبيوتر ميغسي" : "Megsy Computer";
@@ -28,7 +32,7 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
       key={view.url}
       src={view.url}
       title={title}
-      className="absolute inset-0 h-full w-full border-0"
+            className={`absolute inset-0 h-full w-full border-0 ${open ? "pointer-events-auto" : "pointer-events-none"}`}
       allow="clipboard-read; clipboard-write"
       sandbox="allow-scripts allow-same-origin allow-forms"
     />
@@ -75,6 +79,17 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
       </button>
 
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={open ? "تصغير كومبيوتر ميغسي" : "تكبير كومبيوتر ميغسي"}
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setOpen((value) => !value);
+          }
+        }}
         className="relative w-full overflow-hidden bg-foreground/90 transition-[height] duration-[420ms] ease-out"
         style={{ height: open ? "min(48vh, 340px)" : "64px" }}
       >
