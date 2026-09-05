@@ -196,7 +196,7 @@ const AnimatedInput = ({
         setModelPickerOpen(false);
         return;
       }
-      if (value.trim() && !disabled && !isLoading) handleSendWithSlash();
+      if (value.trim() && !disabled) handleSendWithSlash();
     }
   };
 
@@ -478,7 +478,7 @@ const AnimatedInput = ({
             <div className="flex-1" />
 
             <AnimatePresence mode="popLayout" initial={false}>
-              {isLoading ? (
+              {isLoading && !hasText ? (
                 <Button
                   key="stop"
                   onClick={onCancel}
