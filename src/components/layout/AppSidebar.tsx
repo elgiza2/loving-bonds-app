@@ -1183,8 +1183,8 @@ const AppSidebar = ({
         <button
           type="button"
           onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
-          dir={language === "ar-eg" ? "rtl" : "ltr"}
-          className="ms-auto flex min-w-0 items-center gap-3 rounded-full text-foreground"
+          dir="ltr"
+          className="ml-auto flex min-w-0 items-center gap-3 rounded-full text-foreground"
         >
           <span className="max-w-[120px] truncate text-[15px] font-medium">
             {activeUserId ? displayName || (language === "ar-eg" ? "المستخدم" : "User") : language === "ar-eg" ? "تسجيل الدخول" : "Sign in"}
