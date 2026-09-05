@@ -18,7 +18,7 @@
 - [x] Replace the mobile push sidebar with a full-screen overlay page
 - [x] Restyle user messages and place copy/edit controls below the selected message
 - [x] Split thinking behavior: transient for normal chat, permanently detailed for computer/code/long tasks
-- [x] Move the Megsy mark below assistant feedback controls
+- [x] Remove the Megsy mark below assistant feedback controls
 - [x] Add the animated blue lower-page glow for empty and active long-running/media states
 - [x] Hide the header upgrade action after the first message
 - [x] Verify empty, active chat, menus, and long-task states on mobile

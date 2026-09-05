@@ -77,7 +77,7 @@ export default function IntegrationRow({ item, connected, busy, onOpen }: RowPro
         ) : connected ? (
           <Check style={{ width: 18, height: 18 }} className="text-primary" />
         ) : (
-          <ChevronRight className="h-[18px] w-[18px]" />
+          <ChevronRight className="h-[18px] w-[18px] rtl:rotate-180" />
         )}
       </span>
     </button>
