@@ -117,18 +117,17 @@ export default function MediaResultCard({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         src={r.url}
-                        controls
                         playsInline
+                        loop
+                        muted
+                        autoPlay
                         preload="metadata"
+                        onClick={(e) => {
+                          const v = e.currentTarget as HTMLVideoElement;
+                          if (v.paused) void v.play();
+                          else v.pause();
+                        }}
                         className="w-full h-full object-cover rounded-3xl"
-                      />
-                      <GlassDownload
-                        onClick={() =>
-                          forceDownload(
-                            r.url!,
-                            `${r.title.replace(/[^\w-]+/g, "_") || `scene-${r.index}`}.mp4`,
-                          )
-                        }
                       />
                     </>
                   ) : (
@@ -140,14 +139,6 @@ export default function MediaResultCard({
                         src={r.url}
                         alt={r.title}
                         className="w-full h-full object-cover rounded-3xl"
-                      />
-                      <GlassDownload
-                        onClick={() =>
-                          forceDownload(
-                            r.url!,
-                            `${r.title.replace(/[^\w-]+/g, "_") || `scene-${r.index}`}.png`,
-                          )
-                        }
                       />
                     </>
                   )
@@ -313,25 +304,5 @@ function RunningTile({ progress, previewUrl }: { progress?: number; previewUrl?:
         )}
       </div>
     </>
-  );
-}
-
-/**
- * Glass download button, floating overlay on bottom-right of the finished media.
- */
-function GlassDownload({ onClick }: { onClick: () => void }) {
-  return (
-    <motion.button
-      type="button"
-      onClick={onClick}
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, duration: 0.25 }}
-      className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium text-foreground shadow-lg backdrop-blur-xl bg-background/35 hover:bg-background/50 border border-foreground/15 transition-colors"
-      aria-label="Download"
-    >
-      <Download className="w-3.5 h-3.5" />
-      Download
-    </motion.button>
   );
 }
