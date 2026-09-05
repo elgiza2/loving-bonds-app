@@ -180,6 +180,7 @@ export function ComputerPreview({
         <ThinkingTrace
           active={active}
           variant="tools"
+          defaultOpen
           status={thinking}
           steps={traceSteps}
           text={traceText}

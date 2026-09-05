@@ -208,6 +208,7 @@ export function ComposerAnimatedInput(props: ComposerAnimatedInputProps) {
         />
       }
       headerSlot={(props as any).activeServiceHeader ?? null}
+      computerSlot={(props as any).computerSlot ?? null}
       activeServiceSlot={(props as any).activeServiceSlot ?? null}
       serviceTools={
         <ComposerServiceQuickButton

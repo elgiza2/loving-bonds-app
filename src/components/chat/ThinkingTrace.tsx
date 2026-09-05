@@ -34,6 +34,15 @@ export interface ThinkingTraceProps {
 
 const RTL_LANGS = new Set(["ar", "ar-eg", "fa", "he"]);
 
+const iconForLine = (line: string, fallback: string | null | undefined) => {
+  const value = line.toLowerCase();
+  if (/browser|web|site|page|متصفح|موقع|صفحة/.test(value)) return "browser";
+  if (/file|folder|document|ملف|مجلد|مستند/.test(value)) return "file";
+  if (/code|build|terminal|command|كود|برمج|طرفية|أمر/.test(value)) return "code";
+  if (/search|research|بحث/.test(value)) return "search";
+  return fallback || "wrench";
+};
+
 
 /**
  * The single "AI thinking" surface used across chat, deep research, slides,
@@ -178,17 +187,17 @@ const ThinkingTrace = ({
         </button>
 
         {(open || active) && (
-          <ol className="mt-2 flex flex-col gap-2">
+          <ol className="mt-2.5 flex flex-col gap-2.5 border-s border-border/50 ps-3">
             {stepLines.map((line, i) => (
               <li
                 key={`t-${i}-${line.slice(0, 24)}`}
-                className="flex items-start gap-2.5 text-[12.5px] leading-relaxed text-muted-foreground"
+                  className="flex items-start gap-2.5 text-[12.5px] leading-relaxed text-muted-foreground"
               >
                 <span
                   aria-hidden
-                  className="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[5px] border border-border/60 bg-muted/40 text-muted-foreground"
+                   className="-ms-[22px] mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[5px] border border-border/60 bg-background text-muted-foreground"
                 >
-                  <ToolIcon name={tool || "wrench"} size={11} />
+                   <ToolIcon name={iconForLine(line, tool)} size={11} />
                 </span>
                 <span className="min-w-0 break-words">{line}</span>
               </li>

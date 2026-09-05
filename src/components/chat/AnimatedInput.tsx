@@ -55,6 +55,8 @@ interface AnimatedInputProps {
   headerSlot?: React.ReactNode;
   inlineSlot?: React.ReactNode;
   activeServiceSlot?: React.ReactNode;
+  /** Live Megsy Computer surface fused into the composer above the textarea. */
+  computerSlot?: React.ReactNode;
   /** Small icon buttons (model / template pickers) rendered in the bottom control row. */
   serviceTools?: React.ReactNode;
   isEditing?: boolean;
@@ -87,6 +89,7 @@ const AnimatedInput = ({
   headerSlot,
   inlineSlot,
   activeServiceSlot,
+  computerSlot,
   serviceTools,
   isEditing,
   onCancelEdit,
@@ -295,6 +298,9 @@ const AnimatedInput = ({
               : "mx-0 rounded-[26px] px-3.5 pt-3 pb-2.5 md:px-4 md:pt-3 md:pb-2.5"
           } ${chatContext ? "chat-composer-liquid" : ""}`}
         >
+          {computerSlot ? (
+            <div className="-mx-2.5 -mt-1 mb-2 pointer-events-auto md:-mx-3">{computerSlot}</div>
+          ) : null}
           {/* Active service strip — fused into the top of the composer card */}
           {headerSlot && (
             <div className="-mx-2 -mt-1 mb-1.5 pointer-events-auto">{headerSlot}</div>

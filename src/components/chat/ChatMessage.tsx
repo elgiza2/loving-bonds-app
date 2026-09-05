@@ -1530,7 +1530,7 @@ const ChatMessage = ({
           !showNarration &&
           keepSettledTrace &&
           (!!thoughtsText || persistedThinkingSteps.length > 0) && (
-            <ThinkingTrace text={thoughtsText} steps={persistedThinkingSteps} />
+            <ThinkingTrace variant="tools" defaultOpen text={thoughtsText} steps={persistedThinkingSteps} />
           )}
         {role === "assistant" && interrupted && !isStreaming && (
           <div className="mb-2 flex items-center gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-200">
