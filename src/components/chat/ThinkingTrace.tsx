@@ -168,15 +168,15 @@ const ThinkingTrace = ({
       ? `الأدوات المستخدمة · ${stepLines.length} خطوة`
       : `Tools used · ${stepLines.length} steps`;
     return (
-      <div className={`mb-3 ${className}`} dir={rtl ? "rtl" : undefined}>
+      <div className={`mb-3 min-w-0 overflow-hidden ${className}`} dir={rtl ? "rtl" : undefined} data-tool-timeline>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="flex w-full items-center gap-2 text-start text-[12.5px] text-muted-foreground shadow-none"
+          className="flex w-full items-center gap-2 text-start text-[12px] text-muted-foreground shadow-none"
         >
           {active ? (
-            <MegsyStar className={`h-3.5 w-3.5 shrink-0 text-[var(--megsy-blue)] ${pulse}`} />
+            <MegsyStar className={`h-3.5 w-3.5 shrink-0 text-[var(--megsy-gold)] ${pulse}`} />
           ) : (
             <BrandLogo className="h-3.5 w-3.5 shrink-0" />
           )}
@@ -187,19 +187,19 @@ const ThinkingTrace = ({
         </button>
 
         {(open || active) && (
-          <ol className="mt-2.5 flex flex-col gap-2.5 border-s border-border/50 ps-3">
+          <ol className="mt-4 flex min-w-0 flex-col gap-5 border-s border-primary/25 ps-5">
             {stepLines.map((line, i) => (
               <li
                 key={`t-${i}-${line.slice(0, 24)}`}
-                  className="flex items-start gap-2.5 text-[12.5px] leading-relaxed text-muted-foreground"
+                  className="flex min-w-0 items-start gap-3 text-[12.5px] leading-relaxed text-muted-foreground"
               >
                 <span
                   aria-hidden
-                   className="-ms-[22px] mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[5px] border border-border/60 bg-background text-muted-foreground"
+                   className={`-ms-[27px] mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full border bg-background ${active && i === stepLines.length - 1 ? "border-primary/70 text-primary shadow-[0_0_14px_hsl(var(--primary)/0.35)]" : "border-border/70 text-muted-foreground"}`}
                 >
                    <ToolIcon name={iconForLine(line, tool)} size={11} />
                 </span>
-                <span className="min-w-0 break-words">{line}</span>
+                <span className="min-w-0 flex-1 break-words">{line}</span>
               </li>
             ))}
             {stepLines.length === 0 && (

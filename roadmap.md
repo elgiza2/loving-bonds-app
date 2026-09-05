@@ -29,3 +29,4 @@
 - [x] Match the mobile sidebar footer controls to the reference's compact physical dimensions
 - [x] Fix the RTL spacing override and pin the account group to the footer's far right
 - [x] Rebuild and verify mobile starter chips, the embedded Megsy Computer surface, and permanent tool traces
+- [ ] Rebuild the mobile computer run as a dark single-column task view and verify it at 434px

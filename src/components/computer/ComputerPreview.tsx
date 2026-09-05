@@ -6,6 +6,7 @@ import { clearComputerLiveView, setComputerLiveView } from "@/lib/computer/liveV
 import { cleanTrace, isInternalTraceLine } from "@/lib/computer/traceCleanup";
 import ThinkingTrace from "@/components/chat/ThinkingTrace";
 import ChatMessage from "@/components/chat/ChatMessage";
+import ComputerRunViewport from "@/components/chat/ComputerRunViewport";
 
 import { Button } from "@/components/ui/button";
 
@@ -174,7 +175,7 @@ export function ComputerPreview({
   }, [active, url, lastShot, runId, thinking]);
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex w-full flex-col gap-5">
       {/* thinking badge — the only status surface in the chat */}
       {!question && (
         <ThinkingTrace
@@ -186,6 +187,15 @@ export function ComputerPreview({
           text={traceText}
           tool={activeTool}
           className="mb-0"
+        />
+      )}
+
+      {hasScreen && (
+        <ComputerRunViewport
+          url={url}
+          poster={lastShot}
+          active={active}
+          status={thinking}
         />
       )}
 
@@ -245,7 +255,6 @@ export function ComputerPreview({
         </div>
       )}
 
-      {/* the screen itself lives inside the composer dock while the run works */}
       {/* final answer — rendered exactly like a normal assistant message
           (markdown, headings, lists, code, copy/like actions). */}
       {finished && finalText && (
