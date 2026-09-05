@@ -169,5 +169,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-chat-main="true"][data-chat-glow="true"]::before { animation: none; }
+  [data-chat-main="true"][data-chat-glow="true"]::after { animation: none; }
 }
