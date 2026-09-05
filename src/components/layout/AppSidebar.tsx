@@ -1156,110 +1156,45 @@ const AppSidebar = ({
       </div>
 
       <div
-        data-scrolled={mobileScrolled ? "true" : "false"}
-        data-mobile-sidebar-footer-dock={mobileScrolled ? "true" : "false"}
-        className="absolute bottom-0 left-0 right-0 z-20 flex items-center pointer-events-none"
-        style={{
-          padding: mobileScrolled
-            ? `0 10px calc(env(safe-area-inset-bottom, 0px) + 10px) 10px`
-            : `0 18px calc(env(safe-area-inset-bottom, 0px) + 16px) 18px`,
-          gap: mobileScrolled ? "0px" : "10px",
-          transition:
-            "padding 420ms cubic-bezier(0.22, 1, 0.36, 1), gap 420ms cubic-bezier(0.22, 1, 0.36, 1)",
-        }}
+        data-mobile-sidebar-footer="true"
+        className="z-20 flex shrink-0 items-center gap-2 border-t border-border/40 bg-background px-4 pt-3"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
       >
-        {/* Dock surface: transparent at rest, single white card when scrolled */}
-        <div
-          className="pointer-events-auto flex min-w-0 flex-1 items-center"
-          style={{
-            height: mobileScrolled ? "52px" : "42px",
-            paddingLeft: mobileScrolled ? "6px" : "0px",
-            paddingRight: mobileScrolled ? "6px" : "0px",
-            borderRadius: mobileScrolled ? "20px" : "9999px",
-            background: mobileScrolled ? "#ffffff" : "transparent",
-            boxShadow: mobileScrolled
-              ? "0 -8px 40px rgba(0,0,0,0.35), 0 2px 0 rgba(0,0,0,0.02) inset"
-              : "none",
-            transition:
-              "height 420ms cubic-bezier(0.22, 1, 0.36, 1), padding 420ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1), background-color 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1)",
-          }}
+        <button
+          type="button"
+          onClick={() => navigateSmoothly("/settings")}
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-foreground transition-colors hover:bg-muted"
+          aria-label={language === "ar-eg" ? "الإعدادات" : "Settings"}
         >
-          <div
-            data-mobile-sidebar-footer-action="primary"
-            className={
-              activeUserId
-                ? "theme-fixed mobile-sidebar-footer-pill flex min-w-0 items-center h-10 pl-1 pr-1 rounded-full flex-[1_1_auto] max-w-[calc(100%-52px)]"
-                : "flex min-w-0 flex-1 items-center"
-            }
+          <Settings className="h-5 w-5" />
+        </button>
+
+        {activeUserId && (
+          <button
+            type="button"
+            onClick={() => navigateSmoothly("/pricing")}
+            className="h-11 shrink-0 rounded-full bg-primary px-5 text-[14px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
-            <button
-              type="button"
-              data-mobile-sidebar-footer-action="primary"
-              data-sunset={!activeUserId ? "true" : undefined}
-              onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
-              className={
-                activeUserId
-                  ? "theme-fixed mobile-sidebar-footer-action flex min-w-0 items-center gap-2 h-11 pl-1 pr-2 rounded-full text-left transition-transform active:scale-95 w-full"
-                  : "btn-sunset flex w-full items-center justify-center h-11 px-5 rounded-2xl transition-transform active:scale-95 mb-2"
-              }
-              title={activeUserId ? "Settings" : "Sign in"}
-            >
+            {language === "ar-eg" ? "ترقية" : "Upgrade"}
+          </button>
+        )}
 
-              {activeUserId && (
-                <div className="shrink-0">
-                  {displayAvatar ? (
-                    <img loading="lazy" decoding="async"
-                      src={displayAvatar}
-                      alt=""
-                      className="h-8 w-8 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="theme-fixed mobile-sidebar-footer-avatar-fallback grid h-8 w-8 place-items-center rounded-full text-[12px] font-semibold">
-                      {initial}
-                    </div>
-                  )}
-                </div>
-              )}
-              <span className={activeUserId ? "min-w-0 flex-1 truncate text-[12.5px] font-semibold leading-none theme-fixed mobile-sidebar-footer-text" : "truncate text-[14px] font-semibold leading-none text-white"}>
-                {activeUserId ? displayName || "User" : "Sign in"}
-              </span>
-
-            </button>
-            {activeUserId && (
-              <>
-                <span aria-hidden className="theme-fixed mobile-sidebar-footer-divider h-4 w-px shrink-0" />
-                <button
-                  type="button"
-                  onClick={() => navigateSmoothly("/pricing")}
-                  className="theme-fixed mobile-sidebar-footer-action flex items-center justify-center shrink-0 h-11 w-11 rounded-full transition-transform active:scale-95"
-                  title="Get Pro"
-                  aria-label="Get Pro"
-                >
-                  <MegsyStar size={15} static className="mobile-sidebar-footer-icon" />
-                </button>
-              </>
-            )}
-          </div>
-
-          {!!activeUserId && (
-            <button
-              data-mobile-sidebar-footer-action="new"
-              onClick={handleNewChat}
-              className="theme-fixed mobile-sidebar-footer-pill mobile-sidebar-footer-text grid place-items-center active:scale-90 shrink-0"
-              style={{
-                height: "40px",
-                width: "40px",
-                borderRadius: mobileScrolled ? "14px" : "9999px",
-                marginLeft: mobileScrolled ? "14px" : "18px",
-              }}
-
-              title={isBuildMode ? "New project" : "New chat"}
-              aria-label="New chat"
-            >
-              <Plus className="h-[20px] w-[20px]" strokeWidth={2.2} />
-            </button>
+        <button
+          type="button"
+          onClick={() => navigateSmoothly(activeUserId ? "/settings" : "/auth")}
+          className="ms-auto flex min-w-0 items-center gap-2 rounded-full text-foreground"
+        >
+          <span className="max-w-[110px] truncate text-[14px] font-medium">
+            {activeUserId ? displayName || (language === "ar-eg" ? "المستخدم" : "User") : language === "ar-eg" ? "تسجيل الدخول" : "Sign in"}
+          </span>
+          {displayAvatar ? (
+            <img loading="lazy" decoding="async" src={displayAvatar} alt="" className="h-11 w-11 rounded-full object-cover" />
+          ) : (
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-[14px] font-semibold text-primary-foreground">
+              {activeUserId ? initial : <LogIn className="h-5 w-5" />}
+            </span>
           )}
-        </div>
+        </button>
       </div>
 
 
