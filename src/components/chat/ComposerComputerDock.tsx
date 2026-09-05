@@ -54,9 +54,15 @@ export function ComposerComputerDock({ className = "" }: { className?: string })
         aria-expanded={open}
         className="flex w-full items-center gap-2 px-3.5 py-2 text-start"
       >
-        <MegsyStar
-          className={`h-3.5 w-3.5 shrink-0 ${view.active ? "motion-safe:animate-[spin_5s_linear_infinite]" : ""}`}
-        />
+        <span
+          className="grid shrink-0 place-items-center"
+          style={{ color: "var(--megsy-gold)" }}
+        >
+          <MegsyStar
+            className={`h-3.5 w-3.5 ${view.active ? "motion-safe:animate-[spin_5s_linear_infinite]" : ""}`}
+          />
+        </span>
+
         <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-foreground">
           {title}
           {status ? <span className="ms-2 font-normal text-muted-foreground">{status}</span> : null}
