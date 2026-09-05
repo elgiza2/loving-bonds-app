@@ -9,6 +9,8 @@ interface Props {
   /** Notifies the composer so it can switch to the recording animation. */
   onListeningChange?: (listening: boolean) => void;
   lang?: string;
+  /** Renders the mic as a filled gradient action button. */
+  accent?: boolean;
 }
 
 function pickMimeType(): string | undefined {
@@ -29,7 +31,7 @@ function pickMimeType(): string | undefined {
  * on the server, so it works in every browser and inside the Android/iOS
  * webview shells — unlike the Web Speech API, which is Chrome-desktop only.
  */
-export function ComposerMicButton({ onTranscript, onListeningChange, lang = "ar" }: Props) {
+export function ComposerMicButton({ onTranscript, onListeningChange, lang = "ar", accent }: Props) {
   const [listening, setListening] = useState(false);
   const [busy, setBusy] = useState(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -144,15 +146,30 @@ export function ComposerMicButton({ onTranscript, onListeningChange, lang = "ar"
       onClick={() => (listening ? stop() : void start())}
       aria-label={listening ? "Stop recording" : "Voice input"}
       aria-pressed={listening}
-      className="shrink-0 inline-flex w-11 h-11 md:w-10 md:h-10 items-center justify-center rounded-full border-0 bg-transparent outline-none transition-opacity hover:opacity-80 disabled:opacity-60"
-      style={{ background: "transparent", border: 0, boxShadow: "none" }}
+      className={`shrink-0 inline-flex items-center justify-center rounded-full border-0 outline-none transition-opacity hover:opacity-90 disabled:opacity-60 ${
+        accent ? "w-9 h-9" : "w-11 h-11 md:w-10 md:h-10 bg-transparent"
+      }`}
+      style={
+        accent
+          ? {
+              backgroundImage: listening
+                ? "linear-gradient(135deg, hsl(340 86% 60%), hsl(268 88% 62%))"
+                : "linear-gradient(135deg, hsl(212 96% 56%), hsl(268 88% 62%) 55%, hsl(340 86% 62%))",
+              border: 0,
+              boxShadow: "0 6px 18px -8px hsl(232 92% 55% / 0.65)",
+            }
+          : { background: "transparent", border: 0, boxShadow: "none" }
+      }
     >
       {busy ? (
-        <Loader2 className="w-[20px] h-[20px] animate-spin text-foreground/70" strokeWidth={1.9} />
+        <Loader2
+          className={`w-[18px] h-[18px] animate-spin ${accent ? "text-white" : "text-foreground/70"}`}
+          strokeWidth={2}
+        />
       ) : (
         <Mic
-          className={`w-[20px] h-[20px] transition-colors ${listening ? "text-primary" : "text-foreground/70"}`}
-          strokeWidth={1.9}
+          className={`transition-colors ${accent ? "w-[17px] h-[17px] text-white" : `w-[20px] h-[20px] ${listening ? "text-primary" : "text-foreground/70"}`}`}
+          strokeWidth={accent ? 2.1 : 1.9}
         />
       )}
     </button>

@@ -24,6 +24,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { t as uiT, useUserLang } from "@/lib/authI18n";
 import { Button } from "@/components/ui/button";
 
+/** Leading marker used by the "create skill" draft flow. */
+export const SKILL_MARKER = "إنشاء مهارة:";
+
 interface SmartQuestion {
   title: string;
   options: string[];
@@ -282,7 +285,25 @@ const AnimatedInput = ({
     autoResize();
   }, [value, autoResize]);
 
+  const hasText = value.trim().length > 0 || Boolean(canSendWithoutText);
+
+  /** "Create skill" draft — the leading marker gets a blue gradient bar. */
+  useEffect(() => {
+    const onSkillDraft = () => {
+      const current = valueRef.current || "";
+      if (!current.startsWith(SKILL_MARKER)) {
+        onChange(`${SKILL_MARKER} ${current.trimStart()}`.trimEnd() + " ");
+      }
+      window.setTimeout(() => textareaRef.current?.focus(), 80);
+    };
+    window.addEventListener("megsy:skill-draft", onSkillDraft);
+    return () => window.removeEventListener("megsy:skill-draft", onSkillDraft);
+  }, [onChange]);
+
+  const skillDraft = value.startsWith(SKILL_MARKER);
+
   return (
+
     <div className="relative">
       <AnimatePresence>
         {/* @ mention dropdown removed by design. */}
@@ -400,7 +421,26 @@ const AnimatedInput = ({
                   </AnimatePresence>
                 </div>
               )}
+              {skillDraft && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 whitespace-pre-wrap break-words text-transparent text-[15.5px] md:text-sm py-1.5 px-1 leading-relaxed md:py-2 font-medium"
+                >
+                  <span
+                    className="rounded-[6px]"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, hsl(212 96% 58% / 0.28), hsl(232 92% 62% / 0.32), hsl(262 88% 64% / 0.22))",
+                      boxShadow: "inset 0 0 0 1px hsl(219 92% 60% / 0.35)",
+                    }}
+                  >
+                    {SKILL_MARKER}
+                  </span>
+                  {value.slice(SKILL_MARKER.length)}
+                </div>
+              )}
               <textarea
+
                 ref={textareaRef}
                 value={value}
                 onChange={handleChange}
@@ -427,7 +467,8 @@ const AnimatedInput = ({
           </div>
 
 
-          {/* Bottom controls row — borderless icon buttons, send is the only filled one */}
+          {/* Bottom controls row — plus + integrations on the start side, one
+              morphing action button (mic ↔ send) on the end side. */}
           <div
             dir="ltr"
             className="relative flex items-center gap-1 pt-1 md:pt-0"
@@ -449,18 +490,9 @@ const AnimatedInput = ({
             <ComposerIntegrationsButton onClick={() => setIntegrationsOpen(true)} />
             <IntegrationsSheet open={integrationsOpen} onOpenChange={setIntegrationsOpen} />
 
-            <ComposerMicButton
-              onListeningChange={setListening}
-              onTranscript={(text) =>
-                onChange(value ? `${value.trimEnd()} ${text}` : text)
-              }
-            />
-
             {serviceTools}
 
             <div className="flex-1" />
-
-
 
             <AnimatePresence mode="popLayout" initial={false}>
               {isLoading ? (
@@ -474,23 +506,46 @@ const AnimatedInput = ({
                 >
                   <Square className="w-3 h-3" fill="currentColor" />
                 </Button>
-              ) : (
-                <Button
+              ) : hasText ? (
+                <motion.div
                   key="send"
-                  onClick={handleSendWithSlash}
-                  disabled={disabled || (!value.trim() && !canSendWithoutText)}
-                  data-testid="mobile-composer-send"
-                  variant="neutral"
-                  size="icon-sm"
-                  className="shrink-0 rounded-full shadow-none disabled:opacity-40"
-                  aria-label={uiT("sendMessage")}
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                 >
-                  <ArrowUp className="w-[18px] h-[18px] md:w-4 md:h-4" strokeWidth={2.2} />
-                </Button>
-
+                  <Button
+                    onClick={handleSendWithSlash}
+                    disabled={disabled}
+                    data-testid="mobile-composer-send"
+                    variant="neutral"
+                    size="icon-sm"
+                    className="shrink-0 rounded-full shadow-none disabled:opacity-40"
+                    aria-label={uiT("sendMessage")}
+                  >
+                    <ArrowUp className="w-[18px] h-[18px] md:w-4 md:h-4" strokeWidth={2.2} />
+                  </Button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="mic"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                >
+                  <ComposerMicButton
+                    accent
+                    onListeningChange={setListening}
+                    onTranscript={(text) =>
+                      onChange(value ? `${value.trimEnd()} ${text}` : text)
+                    }
+                  />
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
+
         </motion.div>
       </div>
 
