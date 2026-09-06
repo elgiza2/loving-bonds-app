@@ -102,10 +102,13 @@
 /* Lightweight mobile work glow: visible only for an empty chat or an active
    computer/media/long task. It lives below content and never catches taps. */
 @media (max-width: 767.98px) {
+  /* Unified canvas: the chat surface follows the page background so the
+     composer, chips and message area read as one continuous page — no
+     dark band split across the screen. */
   [data-chat-main="true"] {
-    --chat-agent-canvas: 240 6% 4%;
-    --chat-agent-surface: 240 5% 9%;
-    --chat-agent-line: 0 0% 100%;
+    --chat-agent-canvas: var(--background);
+    --chat-agent-surface: var(--card);
+    --chat-agent-line: var(--foreground);
     background: hsl(var(--chat-agent-canvas)) !important;
   }
 

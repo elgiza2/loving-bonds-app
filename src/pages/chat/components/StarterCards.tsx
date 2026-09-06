@@ -36,14 +36,14 @@ const handleCardClick = (
 };
 
 const chipClass =
-  "group inline-flex h-9 items-center gap-2 rounded-full border border-border/45 bg-background/75 " +
-  "px-3.5 shadow-none backdrop-blur-sm hover:bg-muted/70 active:scale-[0.97] " +
+  "group inline-flex h-9 items-center gap-2 rounded-full bg-muted/50 " +
+  "px-3.5 shadow-none hover:bg-muted active:scale-[0.97] " +
   "transition-[background-color,transform] duration-150";
 
 const iconClass =
   "h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground";
 const labelClass =
-  "whitespace-nowrap text-[12.5px] font-medium text-foreground/85 transition-colors";
+  "whitespace-nowrap text-[12.5px] font-medium text-foreground/90 transition-colors";
 
 /** Desktop-only: compact icon chips shown below the composer (no images). */
 export function StarterChips({ onPick, className = "" }: StarterCardsProps) {
